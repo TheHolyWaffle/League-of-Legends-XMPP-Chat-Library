@@ -17,9 +17,14 @@ import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterGroup;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.util.StringUtils;
 
 import com.github.theholywaffle.lolchatapi.LolChat;
 
+/**
+ * Represents a group that can contain multiple friends
+ *
+ */
 public class FriendGroup extends Wrapper<RosterGroup> {
 
 	public FriendGroup(LolChat api, XMPPConnection con, RosterGroup group) {
@@ -41,6 +46,21 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	}
 
 	/**
+	 * Checks if a given Friend is part of this group.
+	 * 
+	 * @param friend - The friend
+	 * @return True if this group contains the friend, false otherwise.
+	 */
+	public boolean contains(Friend friend){
+		for(Friend f : getFriends()){
+			if(StringUtils.parseName(f.getUserId()).equals(StringUtils.parseName(friend.getUserId()))){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * @return list of all Friend's in this group
 	 */
 	public List<Friend> getFriends() {
@@ -57,7 +77,7 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	public String getName() {
 		return get().getName();
 	}
-
+	
 	/**
 	 * Changes the name of this group. Case sensitive.
 	 * 

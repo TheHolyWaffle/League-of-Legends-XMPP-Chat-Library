@@ -14,6 +14,12 @@ import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 
 public interface ChatListener {
 
+	/**
+	 * Gets called when a friend sends you a message
+	 * 
+	 * @param friend - The sender
+	 * @param message - The message
+	 */
 	public void onMessage(Friend friend, String message);
 
 }

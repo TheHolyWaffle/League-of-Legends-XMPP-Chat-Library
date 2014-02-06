@@ -10,7 +10,12 @@
  ******************************************************************************/
 package com.github.theholywaffle.lolchatapi;
 
+/**
+ * Represents a regions chatserver
+ *
+ */
 public enum ChatServer {
+	
 	EUW("chat.eu.lol.riotgames.com"),
 	NA("chat.na1.lol.riotgames.com"),
 	EUNE("chat.eun1.lol.riotgames.com"),
@@ -18,6 +23,7 @@ public enum ChatServer {
 	TH("chatth.lol.garenanow.com"),
 	PH("chatph.lol.garenanow.com"),
 	VN("chatvn.lol.garenanow.com");
+	
 	String host;
 
 	ChatServer(String host) {

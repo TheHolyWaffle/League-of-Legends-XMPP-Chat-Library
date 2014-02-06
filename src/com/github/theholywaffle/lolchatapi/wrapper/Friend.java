@@ -27,6 +27,10 @@ import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.LolStatus;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 
+/**
+ * Represents a friend of your friendlist
+ *
+ */
 public class Friend extends Wrapper<RosterEntry> {
 
 	private Friend instance = null;

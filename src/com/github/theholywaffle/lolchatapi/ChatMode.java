@@ -13,6 +13,10 @@ package com.github.theholywaffle.lolchatapi;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Mode;
 
+/**
+ * Determines the chat mode in the client. Away, busy and available.
+ *
+ */
 public enum ChatMode {
 
 	AVAILABLE(Presence.Mode.chat),

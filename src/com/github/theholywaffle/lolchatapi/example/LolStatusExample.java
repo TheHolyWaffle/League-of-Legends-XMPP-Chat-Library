@@ -58,7 +58,8 @@ public class LolStatusExample {
 			//Example 3: Copy status from friend
 			LolStatus copyStatus = api.getFriendByName("Dyrus").getStatus();
 			copyStatus.setLevel(1337); //Modify it if you like
-			api.setStatus(copyStatus);
+			api.setStatus(copyStatus);			
+			
 		}
 	}
 
