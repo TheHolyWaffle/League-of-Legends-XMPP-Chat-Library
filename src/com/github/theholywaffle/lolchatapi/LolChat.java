@@ -27,7 +27,7 @@ import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
 
-public class LolChat extends Thread {
+public class LolChat {
 
 	private final XMPPConnection connection;
 	private final ArrayList<ChatListener> chatListeners = new ArrayList<>();
@@ -61,7 +61,18 @@ public class LolChat extends Thread {
 			System.err.println("Failed to connect to " + connection.getHost());
 		}
 		addListeners();
-		start();
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (!stop) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException ignored) {
+					}
+				}
+			}
+		}).start();
 	}
 
 	/**
@@ -189,7 +200,8 @@ public class LolChat extends Thread {
 	 * 
 	 * @param xmppAddress
 	 *            For example sum12345678@pvp.net
-	 * @return The corresponding Friend
+	 * @return The corresponding Friend or null if user is not found or he is
+	 *         not a friend of you
 	 */
 	public Friend getFriendById(String xmppAddress) {
 		return new Friend(this, connection, connection.getRoster().getEntry(StringUtils.parseBareAddress(xmppAddress)));
@@ -200,7 +212,8 @@ public class LolChat extends Thread {
 	 * 
 	 * @param name
 	 *            The name of your friend, for example "Dyrus"
-	 * @return The corresponding Friend object or null if not found
+	 * @return The corresponding Friend object or null if user is not found or
+	 *         he is not a friend of you
 	 */
 	public Friend getFriendByName(String name) {
 		for (Friend f : getFriends()) {
@@ -316,7 +329,6 @@ public class LolChat extends Thread {
 
 		} catch (XMPPException e) {
 		}
-		System.out.println(connection.isConnected());
 		return connection.isAuthenticated();
 	}
 
@@ -336,16 +348,6 @@ public class LolChat extends Thread {
 	 */
 	public void removeFriendListener(FriendListener friendListener) {
 		friendListeners.remove(friendListener);
-	}
-
-	@Override
-	public void run() {
-		while (!stop) {
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException ignored) {
-			}
-		}
 	}
 
 	/**
@@ -386,9 +388,9 @@ public class LolChat extends Thread {
 	 * 
 	 * @param status
 	 *            Your custom Status object
-	 * @see Status
+	 * @see LolStatus
 	 */
-	public void setStatus(Status status) {
+	public void setStatus(LolStatus status) {
 		this.status = status.toString();
 		updateStatus();
 	}

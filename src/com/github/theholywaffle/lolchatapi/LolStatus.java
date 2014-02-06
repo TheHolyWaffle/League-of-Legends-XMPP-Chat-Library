@@ -10,7 +10,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
 
-public class Status {
+public class LolStatus {
 
 	public enum Division {
 		NONE,
@@ -106,7 +106,7 @@ public class Status {
 
 	private Document doc;
 
-	public Status() {
+	public LolStatus() {
 		outputter
 				.setFormat(outputter.getFormat().setExpandEmptyElements(false));
 		doc = new Document(new Element("body"));
@@ -115,7 +115,7 @@ public class Status {
 		}
 	}
 
-	public Status(String xml) throws JDOMException, IOException {
+	public LolStatus(String xml) throws JDOMException, IOException {
 		outputter
 				.setFormat(outputter.getFormat().setExpandEmptyElements(false));
 		SAXBuilder saxBuilder = new SAXBuilder();
@@ -322,12 +322,12 @@ public class Status {
 		return get(XMLProperty.isObservable).equals("ALL");
 	}
 
-	public Status setDominionLeaves(int leaves) {
+	public LolStatus setDominionLeaves(int leaves) {
 		setElement(XMLProperty.odinLeaves, leaves);
 		return this;
 	}
 
-	public Status setDominionWins(int wins) {
+	public LolStatus setDominionWins(int wins) {
 		setElement(XMLProperty.odinWins, wins);
 		return this;
 	}
@@ -338,118 +338,118 @@ public class Status {
 	// SETTERS //
 	// ///////////
 
-	public Status setFeaturedGameData(String data) {
+	public LolStatus setFeaturedGameData(String data) {
 		setElement(XMLProperty.featuredGameData, data);
 		return this;
 	}
 
-	public Status setGameQueueType(Queue q) {
+	public LolStatus setGameQueueType(Queue q) {
 		return setGameQueueType(q.name());
 	}
 
-	public Status setGameQueueType(String q) {
+	public LolStatus setGameQueueType(String q) {
 		setElement(XMLProperty.gameQueueType, q);
 		return this;
 	}
 
-	public Status setGameStatus(GameStatus s) {
+	public LolStatus setGameStatus(GameStatus s) {
 		setElement(XMLProperty.gameStatus, s.internal);
 		return this;
 	}
 
-	public Status setLevel(int level) {
+	public LolStatus setLevel(int level) {
 		setElement(XMLProperty.level, level);
 		return this;
 	}
 
-	public Status setNormalLeaves(int leaves) {
+	public LolStatus setNormalLeaves(int leaves) {
 		setElement(XMLProperty.leaves, leaves);
 		return this;
 	}
 
-	public Status setNormalWins(int wins) {
+	public LolStatus setNormalWins(int wins) {
 		setElement(XMLProperty.wins, wins);
 		return this;
 	}
 
-	public Status setObservable() {
+	public LolStatus setObservable() {
 		setElement(XMLProperty.isObservable, "ALL");
 		return this;
 	}
 
-	public Status setProfileIconId(int id) {
+	public LolStatus setProfileIconId(int id) {
 		setElement(XMLProperty.profileIcon, id);
 		return this;
 	}
 
 	@Deprecated
-	public Status setQueueType(Queue q) {
+	public LolStatus setQueueType(Queue q) {
 		setElement(XMLProperty.queueType, q.name());
 		return this;
 	}
 
-	public Status setRankedLeagueDivision(Division d) {
+	public LolStatus setRankedLeagueDivision(Division d) {
 		setElement(XMLProperty.rankedLeagueDivision, d.name());
 		return this;
 	}
 
-	public Status setRankedLeagueName(String name) {
+	public LolStatus setRankedLeagueName(String name) {
 		setElement(XMLProperty.rankedLeagueName, name);
 		return this;
 	}
 
-	public Status setRankedLeagueQueue(Queue q) {
+	public LolStatus setRankedLeagueQueue(Queue q) {
 		setElement(XMLProperty.rankedLeagueQueue, q.name());
 		return this;
 	}
 
-	public Status setRankedLeagueTier(Tier t) {
+	public LolStatus setRankedLeagueTier(Tier t) {
 		setElement(XMLProperty.rankedLeagueTier, t.name());
 		return this;
 	}
 
 	@Deprecated
-	public Status setRankedLosses(int losses) {
+	public LolStatus setRankedLosses(int losses) {
 		setElement(XMLProperty.rankedLosses, losses);
 		return this;
 	}
 
 	@Deprecated
-	public Status setRankedRating(int rating) {
+	public LolStatus setRankedRating(int rating) {
 		setElement(XMLProperty.rankedRating, rating);
 		return this;
 	}
 
-	public Status setRankedWins(int wins) {
+	public LolStatus setRankedWins(int wins) {
 		setElement(XMLProperty.rankedWins, wins);
 		return this;
 	}
 
-	public Status setSkin(String name) {
+	public LolStatus setSkin(String name) {
 		setElement(XMLProperty.skinname, name);
 		return this;
 	}
 
-	public Status setSpectatedGameId(String id) {
+	public LolStatus setSpectatedGameId(String id) {
 		setElement(XMLProperty.dropInSpectateGameId, id);
 		return this;
 	}
 
-	public Status setStatusMessage(String message) {
+	public LolStatus setStatusMessage(String message) {
 		setElement(XMLProperty.statusMsg, message);
 		return this;
 	}
 
-	public Status setTier(Tier t) {
+	public LolStatus setTier(Tier t) {
 		setElement(XMLProperty.tier, t.name());
 		return this;
 	}
 
-	public Status setTimestamp(Date date) {
+	public LolStatus setTimestamp(Date date) {
 		return setTimestamp(date.getTime());
 	}
 
-	public Status setTimestamp(long date) {
+	public LolStatus setTimestamp(long date) {
 		setElement(XMLProperty.timeStamp, date);
 		return this;
 	}

@@ -14,7 +14,7 @@ import org.jivesoftware.smack.packet.Presence.Type;
 
 import com.github.theholywaffle.lolchatapi.ChatMode;
 import com.github.theholywaffle.lolchatapi.LolChat;
-import com.github.theholywaffle.lolchatapi.Status;
+import com.github.theholywaffle.lolchatapi.LolStatus;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 
 public class Friend extends Wrapper<RosterEntry> {
@@ -98,16 +98,16 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * 
 	 * @return Status
 	 */
-	public Status getStatus() {
+	public LolStatus getStatus() {
 		String status = con.getRoster().getPresence(getUserId()).getStatus();
 		if (status != null && !status.isEmpty()) {
 			try {
-				return new Status(status);
+				return new LolStatus(status);
 			} catch (JDOMException | IOException e) {
 				e.printStackTrace();
 			}
 		}
-		return new Status();
+		return new LolStatus();
 	}
 
 	/**
