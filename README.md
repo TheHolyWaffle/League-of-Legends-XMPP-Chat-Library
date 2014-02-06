@@ -49,7 +49,7 @@ if (api.login("myusername", "mypassword")) {
 
 **More examples**
 
-Examples such as using listeners, fetching game data and more can be found here: [com.github.theholywaffle.lolchatapi.example](src/com/github/theholywaffle/lolchatapi/example)
+Examples such as using listeners, fetching game data and more can be found [here.](src/com/github/theholywaffle/lolchatapi/example)
 
 ## Questions or bugs?
 
