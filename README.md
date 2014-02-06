@@ -51,5 +51,9 @@ if (api.login("myusername", "mypassword")) {
 
 Examples such as using listeners, fetching game data and more can be found here: [com.github.theholywaffle.lolchatapi.example](src/com/github/theholywaffle/lolchatapi/example)
 
+## Questions or bugs?
+
+Please let me know them [here](../../issues). I'll help you out as soon as I can.
+
 ___
 *“This product is not endorsed, certified or otherwise approved in any way by Riot Games, Inc. or any of its affiliates.”*
