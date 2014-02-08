@@ -51,6 +51,12 @@ public class ChatExample {
 					}
 				});
 			}
+
+			// Example3: Send Chat Message to an specific friend
+			Friend f = api.getFriendByName("Dyrus");
+			if (f != null && f.isOnline()) {
+				f.sendMessage("Hi, I'm your biggest fan!");
+			}
 		}
 	}
 
