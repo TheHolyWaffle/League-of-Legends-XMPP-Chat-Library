@@ -72,7 +72,7 @@ public class LolChat {
 		try {
 			connection.connect();
 		} catch (XMPPException | SmackException | IOException e) {
-			System.err.println("Failed to connect to " + connection.getHost());
+			System.err.println("Failed to connect to " + server.host);
 		}
 		addListeners();
 		new Thread(new Runnable() {
@@ -291,7 +291,7 @@ public class LolChat {
 	 * Logs in to the chat server. This call is asynchronous.
 	 * 
 	 * @param replaceLeague
-	 *            True will disconnect you account from the League of Legends client. False allows you to have another connection next to the official
+	 *            True will disconnect you account from the League of Legends client. False allows you to have another connection open next to the official
 	 *            connection in the League of Legends client.
 	 * @return True if login was succesful
 	 */

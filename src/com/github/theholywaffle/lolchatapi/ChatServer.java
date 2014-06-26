@@ -16,11 +16,16 @@ package com.github.theholywaffle.lolchatapi;
  */
 public enum ChatServer {
 
-	EUW("chat.euw1.lol.riotgames.com"),
 	NA("chat.na1.lol.riotgames.com"),
+	EUW("chat.euw1.lol.riotgames.com"),
 	EUNE("chat.eun1.riotgames.com"),
 	PBE("chat.pbe1.lol.riotgames.com"),
 	OCE("chat.oc1.lol.riotgames.com"),
+	BR("chat.br.lol.riotgames.com"),
+	TR("chat.tr.lol.riotgames.com"),
+	RU("chat.ru.lol.riotgames.com"),
+	LAN("chat.la1.lol.riotgames.com"),
+	LAS("chat.la2.lol.riotgames.com"),
 	TW("chattw.lol.garenanow.com"),
 	TH("chatth.lol.garenanow.com"),
 	PH("chatph.lol.garenanow.com"),
