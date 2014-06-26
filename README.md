@@ -1,7 +1,7 @@
 League of Legends XMPP Chat Library
 ===================================
 
-A Java 7 XMPP library to chat and interact with the League of Legends chatservers. Built upon [Smack](http://www.igniterealtime.org/projects/smack/) and [JDOM](http://www.jdom.org/)
+A Java 7 XMPP library to chat and interact with the League of Legends chatservers. Built upon [Smack](http://www.igniterealtime.org/projects/smack/) and [JDOM](http://www.jdom.org/).
 
 ## Features
 
@@ -9,7 +9,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 - Event-based chat system
 - Automatic reconnecting
 - Managing of Friends and FriendGroups
-- Fetch extra info of your friends such as level, amount of wins, current division ...
+- Fetch metadata of friends (level, current division, ...)
 
 ## Getting Started
 
@@ -44,7 +44,7 @@ if (api.login("myusername", "mypassword")) {
 
 **More examples**
 
-[here](src/com/github/theholywaffle/lolchatapi/example)
+[look here](src/com/github/theholywaffle/lolchatapi/example)
 
 ## Questions or bugs?
 
