@@ -23,12 +23,6 @@ To start of you have to first create a [LolChat](src/com/github/theholywaffle/lo
 LolChat api = new LolChat(ChatServer.EUW, false);
 if (api.login("myusername", "mypassword")) {
 
-	try {
-		Thread.sleep(1000); // Give server some time to send us all the data
-	} catch (InterruptedException e) {
-		e.printStackTrace();
-	}
-
 	// Example 1: Send Chat Message to all your friends
 	for (Friend f : api.getFriends()) {
 		f.sendMessage("Hello " + f.getName());
