@@ -29,12 +29,6 @@ public class LolStatusExample {
 	public LolStatusExample() {
 		LolChat api = new LolChat(ChatServer.EUW, false);
 		if (api.login("myusername", "mypassword")) {
-			try {
-				Thread.sleep(1000); // Give server some time to send us all the
-									// data
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 
 			// Example 1: Print out all groups and all friends in those groups
 			Friend dyrus = api.getFriendByName("Dyrus");
@@ -58,7 +52,7 @@ public class LolStatusExample {
 			//Example 3: Copy status from friend
 			LolStatus copyStatus = api.getFriendByName("Dyrus").getStatus();
 			copyStatus.setLevel(1337); //Modify it if you like
-			api.setStatus(copyStatus);			
+			api.setStatus(copyStatus); //Put it as your own status
 			
 		}
 	}

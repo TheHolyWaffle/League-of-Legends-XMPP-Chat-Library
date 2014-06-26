@@ -28,13 +28,6 @@ public class FriendGroupExample {
 		LolChat api = new LolChat(ChatServer.EUW, false);
 		if (api.login("myusername", "mypassword")) {
 
-			try {
-				Thread.sleep(1000); // Give server some time to send us all the
-									// data
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
 			// Example 1: Print out all groups and all friends in those groups
 			for (FriendGroup g : api.getFriendGroups()) {
 				System.out.println("Group: " + g.getName()); // Print out name

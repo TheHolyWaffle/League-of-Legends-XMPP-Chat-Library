@@ -87,5 +87,10 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	public void setName(String name) {
 		get().setName(name);
 	}
+	
+	@Override
+	public String toString(){
+		return getName();
+	}
 
 }

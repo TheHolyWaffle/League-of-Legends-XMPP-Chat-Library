@@ -26,12 +26,6 @@ public class OnlineOfflineExample {
 	public OnlineOfflineExample() {
 		LolChat api = new LolChat(ChatServer.EUW, false);
 		if (api.login("myusername", "mypassword")) {
-			try {
-				Thread.sleep(1000); // Give server some time to send us all the
-									// data
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			
 			//Example 1: appear offline
 			api.setOffline();
