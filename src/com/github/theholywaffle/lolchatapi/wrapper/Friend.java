@@ -14,8 +14,12 @@ import java.io.IOException;
 
 import org.jdom2.JDOMException;
 import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
@@ -51,15 +55,15 @@ public class Friend extends Wrapper<RosterEntry> {
 		try {
 			con.getRoster().removeEntry(get());
 			return true;
-		} catch (XMPPException e) {
+		} catch (XMPPException | NotLoggedInException | NoResponseException | NotConnectedException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 
 	private Chat getChat() {
-		if (chat == null) {
-			chat = con.getChatManager().createChat(getUserId(),
+		if (chat == null) {			
+			chat = ChatManager.getInstanceFor(con).createChat(getUserId(),
 					new MessageListener() {
 
 						@Override
@@ -147,7 +151,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	public void sendMessage(String message) {
 		try {
 			getChat().sendMessage(message);
-		} catch (XMPPException e) {
+		} catch (XMPPException | NotConnectedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -167,7 +171,7 @@ public class Friend extends Wrapper<RosterEntry> {
 		this.listener = listener;
 		try {
 			getChat().sendMessage(message);
-		} catch (XMPPException e) {
+		} catch (XMPPException | NotConnectedException e) {
 			e.printStackTrace();
 		}
 	}

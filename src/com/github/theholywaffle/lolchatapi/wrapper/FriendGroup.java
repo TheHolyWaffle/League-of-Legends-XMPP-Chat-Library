@@ -15,8 +15,10 @@ import java.util.List;
 
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterGroup;
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.util.StringUtils;
 
 import com.github.theholywaffle.lolchatapi.LolChat;
@@ -32,15 +34,15 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	}
 
 	/**
-	 * Moves a friend to this group and removes the friend from his previous
-	 * group. This is an asynchronous call.
+	 * Moves a friend to this group and removes the friend from his previous group. This is an asynchronous call.
 	 * 
 	 * @param friend
 	 */
 	public void addFriend(Friend friend) {
 		try {
 			get().addEntry(friend.get());
-		} catch (XMPPException e) {
+		} catch (NoResponseException | XMPPErrorException
+				| NotConnectedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -48,12 +50,14 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	/**
 	 * Checks if a given Friend is part of this group.
 	 * 
-	 * @param friend - The friend
+	 * @param friend
+	 *            - The friend
 	 * @return True if this group contains the friend, false otherwise.
 	 */
-	public boolean contains(Friend friend){
-		for(Friend f : getFriends()){
-			if(StringUtils.parseName(f.getUserId()).equals(StringUtils.parseName(friend.getUserId()))){
+	public boolean contains(Friend friend) {
+		for (Friend f : getFriends()) {
+			if (StringUtils.parseName(f.getUserId()).equals(
+					StringUtils.parseName(friend.getUserId()))) {
 				return true;
 			}
 		}
@@ -77,7 +81,7 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	public String getName() {
 		return get().getName();
 	}
-	
+
 	/**
 	 * Changes the name of this group. Case sensitive.
 	 * 
@@ -85,11 +89,15 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	 *            the new name of this group
 	 */
 	public void setName(String name) {
-		get().setName(name);
+		try {
+			get().setName(name);
+		} catch (NotConnectedException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return getName();
 	}
 

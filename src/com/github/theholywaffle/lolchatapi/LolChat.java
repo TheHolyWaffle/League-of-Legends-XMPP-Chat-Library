@@ -10,11 +10,13 @@
  ******************************************************************************/
 package com.github.theholywaffle.lolchatapi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
@@ -22,10 +24,13 @@ import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterGroup;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.spark.util.DummySSLSocketFactory;
 
@@ -63,10 +68,10 @@ public class LolChat {
 		config.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
 		config.setSocketFactory(new DummySSLSocketFactory());
 		config.setCompressionEnabled(true);
-		connection = new XMPPConnection(config);
+		connection = new XMPPTCPConnection(config);
 		try {
 			connection.connect();
-		} catch (XMPPException e) {
+		} catch (XMPPException | SmackException | IOException e) {
 			System.err.println("Failed to connect to " + connection.getHost());
 		}
 		addListeners();
@@ -105,36 +110,43 @@ public class LolChat {
 	private void addListeners() {
 		connection.getRoster().addRosterListener(
 				leagueRosterListener = new LeagueRosterListener(this));
-		connection.getChatManager().addChatListener(new ChatManagerListener() {
+		ChatManager.getInstanceFor(connection).addChatListener(
+				new ChatManagerListener() {
 
-			@Override
-			public void chatCreated(Chat c, boolean locally) {
-				final Friend friend = getFriendById(c.getParticipant());
-				if (friend != null) {
-					c.addMessageListener(new MessageListener() {
+					@Override
+					public void chatCreated(Chat c, boolean locally) {
+						final Friend friend = getFriendById(c.getParticipant());
+						if (friend != null) {
+							c.addMessageListener(new MessageListener() {
 
-						@Override
-						public void processMessage(Chat chat, Message msg) {
-							for (ChatListener c : chatListeners) {
-								if (msg.getType() == Message.Type.chat) {
-									c.onMessage(friend, msg.getBody());
+								@Override
+								public void processMessage(
+										Chat chat, Message msg) {
+									for (ChatListener c : chatListeners) {
+										if (msg.getType() == Message.Type.chat) {
+											c.onMessage(friend, msg.getBody());
+										}
+									}
 								}
-							}
+							});
+						} else {
+							System.err
+									.println("Friend is null in chat creation");
 						}
-					});
-				} else {
-					System.err.println("Friend is null in chat creation");
-				}
 
-			}
-		});
+					}
+				});
 	}
 
 	/**
 	 * Disconnects from chatserver and releases all resources.
 	 */
 	public void disconnect() {
-		connection.disconnect();
+		try {
+			connection.disconnect();
+		} catch (NotConnectedException e) {
+			e.printStackTrace();
+		}
 		stop = true;
 	}
 
@@ -283,7 +295,9 @@ public class LolChat {
 	 *            connection in the League of Legends client.
 	 * @return True if login was succesful
 	 */
-	public boolean login(String username, String password, boolean replaceLeague) {
+	public
+			boolean login(
+					String username, String password, boolean replaceLeague) {
 		try {
 			if (replaceLeague) {
 				connection.login(username, "AIR_" + password, "xiff");
@@ -291,7 +305,7 @@ public class LolChat {
 				connection.login(username, "AIR_" + password);
 			}
 
-		} catch (XMPPException e) {
+		} catch (XMPPException | SmackException | IOException e) {
 		}
 		if (connection.isAuthenticated()) {
 			long startTime = System.currentTimeMillis();
@@ -371,7 +385,11 @@ public class LolChat {
 
 	private void updateStatus() {
 		Presence newPresence = new Presence(type, status, 1, mode);
-		connection.sendPacket(newPresence);
+		try {
+			connection.sendPacket(newPresence);
+		} catch (NotConnectedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
