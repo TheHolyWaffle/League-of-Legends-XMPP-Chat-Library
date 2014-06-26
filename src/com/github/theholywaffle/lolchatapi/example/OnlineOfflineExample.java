@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.github.theholywaffle.lolchatapi.example;
 
-import java.util.logging.LogManager;
-
 import com.github.theholywaffle.lolchatapi.ChatMode;
 import com.github.theholywaffle.lolchatapi.ChatServer;
 import com.github.theholywaffle.lolchatapi.LolChat;
@@ -19,7 +17,6 @@ import com.github.theholywaffle.lolchatapi.LolChat;
 public class OnlineOfflineExample {
 
 	public static void main(String[] args) {
-		LogManager.getLogManager().reset(); // Disable logging of Smack
 		new OnlineOfflineExample();
 	}
 

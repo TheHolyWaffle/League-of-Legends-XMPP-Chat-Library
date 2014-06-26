@@ -10,8 +10,6 @@
  ******************************************************************************/
 package com.github.theholywaffle.lolchatapi.example;
 
-import java.util.logging.LogManager;
-
 import com.github.theholywaffle.lolchatapi.ChatServer;
 import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
@@ -20,7 +18,6 @@ import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
 public class FriendGroupExample {
 
 	public static void main(String[] args) {
-		LogManager.getLogManager().reset(); // Disable logging of Smack
 		new FriendGroupExample();
 	}
 
