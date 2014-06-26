@@ -13,7 +13,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 ## Getting Started
 
-* Download the latest release: https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/releases/latest
+* Download the [latest release](../../releases/latest)
 * Additionally Maven is required because of the dependencies (see [pom.xml](pom.xml))
 * To start of you have to create a [LolChat](src/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region. From there on you can do anything you want with it.
 
@@ -43,7 +43,7 @@ if (api.login("myusername", "mypassword")) {
 
 **More examples**
 
-Examples such as using listeners, fetching game data and more can be found [here.](src/com/github/theholywaffle/lolchatapi/example)
+[here](src/com/github/theholywaffle/lolchatapi/example)
 
 ## Questions or bugs?
 
