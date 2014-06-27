@@ -96,6 +96,8 @@ public class Friend extends Wrapper<RosterEntry> {
 	}
 
 	/**
+	 * Gets the FriendGroup that contains this friend.
+	 * 
 	 * @return the FriendGroup that currently contains this Friend
 	 */
 	public FriendGroup getGroup() {
@@ -103,7 +105,9 @@ public class Friend extends Wrapper<RosterEntry> {
 	}
 
 	/**
-	 * @return name of your Friend (e.g. Dyrus)
+	 * Gets the name of this friend.
+	 * 
+	 * @return name of this Friend (e.g. Dyrus)
 	 */
 	public String getName() {
 		return get().getName();
@@ -129,6 +133,8 @@ public class Friend extends Wrapper<RosterEntry> {
 	}
 
 	/**
+	 * Gets the XMPPAddress of your Friend (e.g. sum123456@pvp.net)
+	 * 
 	 * @return the XMPPAddress of your Friend (e.g. sum123456@pvp.net)
 	 */
 	public String getUserId() {

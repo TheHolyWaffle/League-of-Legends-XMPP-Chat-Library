@@ -16,19 +16,61 @@ package com.github.theholywaffle.lolchatapi;
  */
 public enum ChatServer {
 
+	/**
+	 * North-America
+	 */
 	NA("chat.na1.lol.riotgames.com"),
+	/**
+	 * Europe West
+	 */
 	EUW("chat.euw1.lol.riotgames.com"),
+	/**
+	 * Europe Nordic & East
+	 */
 	EUNE("chat.eun1.riotgames.com"),
+	/**
+	 * Public Beta Environment
+	 */
 	PBE("chat.pbe1.lol.riotgames.com"),
+	/**
+	 * Oceania
+	 */
 	OCE("chat.oc1.lol.riotgames.com"),
+	/**
+	 * Brazil
+	 */
 	BR("chat.br.lol.riotgames.com"),
+	/**
+	 * Turkey
+	 */
 	TR("chat.tr.lol.riotgames.com"),
+	/**
+	 * Russia
+	 */
 	RU("chat.ru.lol.riotgames.com"),
+	/**
+	 * Latin America North
+	 */
 	LAN("chat.la1.lol.riotgames.com"),
+	/**
+	 * Latin America South
+	 */
 	LAS("chat.la2.lol.riotgames.com"),
+	/**
+	 * Taiwan
+	 */
 	TW("chattw.lol.garenanow.com"),
+	/**
+	 * Thailand
+	 */
 	TH("chatth.lol.garenanow.com"),
+	/**
+	 * Phillipines
+	 */
 	PH("chatph.lol.garenanow.com"),
+	/**
+	 * Vietnam
+	 */
 	VN("chatvn.lol.garenanow.com");
 
 	String host;

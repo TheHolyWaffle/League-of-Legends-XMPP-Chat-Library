@@ -116,6 +116,10 @@ public class LolStatus {
 
 	private Document doc;
 
+	/**
+	 *  Generate a default LoLStatus that can later be modified and be used to change the current LolStatus.
+	 *  @See {@link LolChat#setStatus(LolStatus)}
+	 */
 	public LolStatus() {
 		outputter
 				.setFormat(outputter.getFormat().setExpandEmptyElements(false));
@@ -125,6 +129,9 @@ public class LolStatus {
 		}
 	}
 
+	/**
+	 * This constructor is not intended for usage.
+	 */
 	public LolStatus(String xml) throws JDOMException, IOException {
 		outputter
 				.setFormat(outputter.getFormat().setExpandEmptyElements(false));

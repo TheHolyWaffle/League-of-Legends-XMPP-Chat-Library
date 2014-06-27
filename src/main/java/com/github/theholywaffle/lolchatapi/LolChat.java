@@ -161,6 +161,8 @@ public class LolChat {
 	}
 
 	/**
+	 * Gets the default FriendGroup
+	 * 
 	 * @return default FriendGroup
 	 */
 	public FriendGroup getDefaultFriendGroup() {
@@ -168,7 +170,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Gets your friend based on his XMPPAddress
+	 * Gets a friend based on his XMPPAddress
 	 * 
 	 * @param xmppAddress
 	 *            For example sum12345678@pvp.net
@@ -211,7 +213,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Get all your FriendGroups
+	 * Get a list of all your FriendGroups
 	 * 
 	 * @return A List of all your FriendGroups
 	 */
@@ -281,8 +283,9 @@ public class LolChat {
 
 	/**
 	 * Logs in to the chat server without replacing the official connection of the League of Legends client. This call is asynchronous.
-	 * 
-	 * @return true if login is successful, otherwise false
+	 * @param username Username of your account
+	 * @param password Password of your account
+	 * @return true if login is successful, false otherwise
 	 */
 	public boolean login(String username, String password) {
 		return login(username, password, false);
@@ -291,10 +294,12 @@ public class LolChat {
 	/**
 	 * Logs in to the chat server. This call is asynchronous.
 	 * 
+	 * @param username Username of your account
+	 * @param password Password of your account 
 	 * @param replaceLeague
 	 *            True will disconnect you account from the League of Legends client. False allows you to have another connection open next to the official
 	 *            connection in the League of Legends client.
-	 * @return True if login was succesful
+	 * @return true if login was succesful, false otherwise
 	 */
 	public
 			boolean login(

@@ -5,12 +5,12 @@
 	<groupId>com.github.theholywaffle</groupId>
 	<artifactId>lolchatapi</artifactId>
 	<version>1.0.3</version>
-	
+
 	<issueManagement>
 		<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
-	
+
 	<developers>
 		<developer>
 			<email>degeyter.bert@gmail.com</email>
@@ -19,7 +19,7 @@
 			<id>TheHolyWaffle</id>
 		</developer>
 	</developers>
-	
+
 	<licenses>
 		<license>
 			<name>GNU GENERAL PUBLIC LICENSE</name>
@@ -27,13 +27,13 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
 	<scm>
 		<url>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</url>
 		<connection>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</connection>
 		<developerConnection>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</developerConnection>
 	</scm>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -67,6 +67,10 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludePackageNames>com.github.theholywaffle.lolchatapi.example:org.jivesoftware.spark.util</excludePackageNames>
+					<show>public</show>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
@@ -104,7 +108,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<dependencies>
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
@@ -127,11 +131,11 @@
 			<version>2.0.5</version>
 		</dependency>
 	</dependencies>
-	
+
 	<name>League of Legends XMPP Chat Library</name>
 	<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library</url>
 	<description>A Java 7 XMPP API to chat and interact with the League of Legends ChatServers.</description>
-	
+
 	<distributionManagement>
 		<repository>
 			<id>internal.repo</id>
@@ -139,10 +143,10 @@
 			<url>file://${project.build.directory}/mvn-repo</url>
 		</repository>
 	</distributionManagement>
-	
+
 	<properties>
 		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
 		<github.global.server>github</github.global.server>
 	</properties>
-	
+
 </project>

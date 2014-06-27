@@ -50,8 +50,7 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	/**
 	 * Checks if a given Friend is part of this group.
 	 * 
-	 * @param friend
-	 *            - The friend
+	 * @param friend The friend
 	 * @return True if this group contains the friend, false otherwise.
 	 */
 	public boolean contains(Friend friend) {
@@ -65,7 +64,9 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	}
 
 	/**
-	 * @return list of all Friend's in this group
+	 * Gets a list of all Friends in this FriendGroup
+	 * 
+	 * @return list of all Friends in this group
 	 */
 	public List<Friend> getFriends() {
 		List<Friend> friends = new ArrayList<>();
@@ -76,6 +77,8 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	}
 
 	/**
+	 * Gets the name of this FriendGroup
+	 * 
 	 * @return The name of this FriendGroup
 	 */
 	public String getName() {
