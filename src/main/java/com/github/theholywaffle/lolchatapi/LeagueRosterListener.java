@@ -25,11 +25,11 @@ public class LeagueRosterListener implements RosterListener {
 	private HashMap<String, Presence.Mode> modeUsers = new HashMap<>();
 	private HashMap<String, String> statusUsers = new HashMap<>();
 	private LolChat api;
-	
+
 	private boolean added;
-	
-	public LeagueRosterListener(LolChat api){
-		this.api=api;
+
+	public LeagueRosterListener(LolChat api) {
+		this.api = api;
 	}
 
 	public void entriesAdded(Collection<String> e) {
@@ -48,34 +48,31 @@ public class LeagueRosterListener implements RosterListener {
 			Friend friend = api.getFriendById(from);
 			if (friend != null) {
 				for (FriendListener l : api.getFriendListeners()) {
-					if (typeUsers.containsKey(from)) {
-						Presence.Type previous = typeUsers.get(from);
-						if (p.getType() == Presence.Type.available && previous != Presence.Type.available) {
-							l.onFriendJoin(friend);
-						} else if (p.getType() == Presence.Type.unavailable
-								&& previous != Presence.Type.unavailable) {
-							l.onFriendLeave(friend);
-						}
-					} else if (p.getType() == Presence.Type.available) {
+					Presence.Type previousType = typeUsers.get(from);
+					if (p.getType() == Presence.Type.available
+							&& (previousType == null || previousType != Presence.Type.available)) {
 						l.onFriendJoin(friend);
+					} else if (p.getType() == Presence.Type.unavailable
+							&& (previousType == null || previousType != Presence.Type.unavailable)) {
+						l.onFriendLeave(friend);
 					}
 
-					if (modeUsers.containsKey(from)) {
-						Presence.Mode previous = modeUsers.get(from);
-						if (p.getMode() == Presence.Mode.chat && previous != Presence.Mode.chat) {
-							l.onFriendAvailable(friend);
-						} else if (p.getMode() == Presence.Mode.away && previous != Presence.Mode.away) {
-							l.onFriendAway(friend);
-						} else if (p.getMode() == Presence.Mode.dnd && previous != Presence.Mode.dnd) {
-							l.onFriendBusy(friend);
-						}
+					Presence.Mode previousMode = modeUsers.get(from);
+					if (p.getMode() == Presence.Mode.chat
+							&& (previousMode == null || previousMode != Presence.Mode.chat)) {
+						l.onFriendAvailable(friend);
+					} else if (p.getMode() == Presence.Mode.away
+							&& (previousMode == null || previousMode != Presence.Mode.away)) {
+						l.onFriendAway(friend);
+					} else if (p.getMode() == Presence.Mode.dnd
+							&& (previousMode == null || previousMode != Presence.Mode.dnd)) {
+						l.onFriendBusy(friend);
 					}
 
-					if (statusUsers.containsKey(from)) {
-						String previous = statusUsers.get(from);
-						if (!p.getStatus().equals(previous)) {
-							l.onFriendStatusChange(friend);
-						}
+					String previousStatus = statusUsers.get(from);
+					if (previousStatus == null
+							|| !p.getStatus().equals(previousStatus)) {
+						l.onFriendStatusChange(friend);
 					}
 
 					typeUsers.put(from, p.getType());
@@ -85,8 +82,8 @@ public class LeagueRosterListener implements RosterListener {
 			}
 		}
 	}
-	
-	public boolean isLoaded(){
+
+	public boolean isLoaded() {
 		return added;
 	}
 

@@ -142,6 +142,7 @@ public class LolChat {
 	 * Disconnects from chatserver and releases all resources.
 	 */
 	public void disconnect() {
+		connection.getRoster().removeRosterListener(leagueRosterListener);
 		try {
 			connection.disconnect();
 		} catch (NotConnectedException e) {
