@@ -92,7 +92,7 @@ public class LolChat {
 	/**
 	 * Adds a ChatListener that listens to messages from all your friends.
 	 * 
-	 * @param chatListener
+	 * @param chatListener The ChatListener that you want to add
 	 */
 	public void addChatListener(ChatListener chatListener) {
 		chatListeners.add(chatListener);
@@ -101,7 +101,7 @@ public class LolChat {
 	/**
 	 * Adds a FriendListener that listens to changes from all your friends. Such as logging in, starting games, ...
 	 * 
-	 * @param friendListener
+	 * @param friendListener The FriendListener that you want to add
 	 */
 	public void addFriendListener(FriendListener friendListener) {
 		friendListeners.add(friendListener);
@@ -330,7 +330,7 @@ public class LolChat {
 	/**
 	 * Removes the ChatListener from the list and will no longer be called.
 	 * 
-	 * @param chatListener
+	 * @param chatListener The ChatListener that you want to remove
 	 */
 	public void removeChatListener(ChatListener chatListener) {
 		chatListeners.remove(chatListener);
@@ -339,7 +339,7 @@ public class LolChat {
 	/**
 	 * Removes the FriendListener from the list and will no longer be called.
 	 * 
-	 * @param friendListener
+	 * @param friendListener The FriendListener that you want to remove
 	 */
 	public void removeFriendListener(FriendListener friendListener) {
 		friendListeners.remove(friendListener);
@@ -348,7 +348,7 @@ public class LolChat {
 	/**
 	 * Changes your ChatMode (e.g. ingame, away, available)
 	 * 
-	 * @param chatMode
+	 * @param chatMode The new ChatMode
 	 * @see ChatMode
 	 */
 	public void setChatMode(ChatMode chatMode) {

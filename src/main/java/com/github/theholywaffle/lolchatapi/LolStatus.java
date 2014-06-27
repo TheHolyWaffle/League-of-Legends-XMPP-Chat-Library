@@ -117,8 +117,8 @@ public class LolStatus {
 	private Document doc;
 
 	/**
-	 *  Generate a default LoLStatus that can later be modified and be used to change the current LolStatus.
-	 *  @See {@link LolChat#setStatus(LolStatus)}
+	 *  Generate a default LoLStatus that can later be modified and be used to change the current LolStatus ({@link LolChat#setStatus(LolStatus)})
+	 *  
 	 */
 	public LolStatus() {
 		outputter
