@@ -13,8 +13,27 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 ## Getting Started
 
-* Download the [latest release](../../releases/latest) and add to buildpath.
-* Additionally Maven is required because of the dependencies (see [pom.xml](pom.xml)).
+* Create a maven project.
+* Add the following to your pom.xml
+```
+	<repositories>
+		<repository>
+			<id>League-of-Legends-XMPP-Chat-Library-mvn-repo</id>
+			<url>https://raw.githubusercontent.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	<dependencies>
+		<dependency>
+			<groupId>com.github.theholywaffle</groupId>
+			<artifactId>lolchatapi</artifactId>
+			<version>LATEST</version>
+		</dependency>
+	</dependencies>
+```
 * To use this api you have to create a [LolChat](src/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
 * Do what you want with this [LolChat](src/com/github/theholywaffle/lolchatapi/LolChat.java) object (see examples).
 
