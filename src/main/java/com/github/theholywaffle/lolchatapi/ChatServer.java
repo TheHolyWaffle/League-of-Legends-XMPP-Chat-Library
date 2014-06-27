@@ -25,7 +25,7 @@ public enum ChatServer {
 	 */
 	EUW("chat.euw1.lol.riotgames.com"),
 	/**
-	 * Europe Nordic & East
+	 * Europe Nordic and East
 	 */
 	EUNE("chat.eun1.riotgames.com"),
 	/**
