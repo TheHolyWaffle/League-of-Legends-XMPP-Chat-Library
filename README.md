@@ -30,7 +30,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 		<dependency>
 			<groupId>com.github.theholywaffle</groupId>
 			<artifactId>lolchatapi</artifactId>
-			<version>LATEST</version>
+			<version>[1.0.0,2.0.0)</version>
 		</dependency>
 	</dependencies>
 ```
