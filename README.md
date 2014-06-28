@@ -34,8 +34,8 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 		</dependency>
 	</dependencies>
 ```
-* To use this api you have to create a [LolChat](src/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
-* Do what you want with this [LolChat](src/com/github/theholywaffle/lolchatapi/LolChat.java) object (see examples).
+* To use this api you have to create a [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/main/java/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
+* Do what you want with this [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object (see examples).
 
 **Example:**
 
@@ -63,7 +63,7 @@ if (api.login("myusername", "mypassword")) {
 
 **More examples**
 
-[look here](src/com/github/theholywaffle/lolchatapi/example)
+[look here](src/main/java/com/github/theholywaffle/lolchatapi/example)
 
 ## Questions or bugs?
 
