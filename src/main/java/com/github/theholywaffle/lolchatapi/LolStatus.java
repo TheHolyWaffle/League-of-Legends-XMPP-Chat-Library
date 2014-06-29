@@ -54,7 +54,8 @@ public class LolStatus {
 		SPECTATING("spectating"),
 		OUT_OF_GAME("outOfGame"),
 		CHAMPION_SELECT("championSelect"),
-		IN_GAME("inGame");
+		IN_GAME("inGame"),
+		IN_TEAMBUILDER("inTeamBuilder");
 
 		private String internal;
 

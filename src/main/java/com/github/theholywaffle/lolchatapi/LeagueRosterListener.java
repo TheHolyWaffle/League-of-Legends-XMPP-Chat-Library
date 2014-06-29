@@ -118,8 +118,6 @@ public class LeagueRosterListener implements RosterListener {
 						statusUsers.put(from, new LolStatus(p.getStatus()));
 					} catch (JDOMException | IOException e) {
 					}
-				} else {
-					statusUsers.put(from, null);
 				}
 			}
 		}
