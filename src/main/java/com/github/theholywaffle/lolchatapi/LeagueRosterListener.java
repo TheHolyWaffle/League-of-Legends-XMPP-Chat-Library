@@ -1,20 +1,35 @@
-/*******************************************************************************
- * Copyright (c) 2014 Bert De Geyter (https://github.com/TheHolyWaffle).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- * 
- * Contributors:
- *     Bert De Geyter (https://github.com/TheHolyWaffle)
- ******************************************************************************/
 package com.github.theholywaffle.lolchatapi;
 
+/*
+ * #%L
+ * League of Legends XMPP Chat Library
+ * %%
+ * Copyright (C) 2014 Bert De Geyter
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
+
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 
+import org.jdom2.JDOMException;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.util.StringUtils;
 
 import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
@@ -23,7 +38,7 @@ public class LeagueRosterListener implements RosterListener {
 
 	private HashMap<String, Presence.Type> typeUsers = new HashMap<>();
 	private HashMap<String, Presence.Mode> modeUsers = new HashMap<>();
-	private HashMap<String, String> statusUsers = new HashMap<>();
+	private HashMap<String, LolStatus> statusUsers = new HashMap<>();
 	private LolChat api;
 
 	private boolean added;
@@ -33,7 +48,19 @@ public class LeagueRosterListener implements RosterListener {
 	}
 
 	public void entriesAdded(Collection<String> e) {
-		added = true;
+		if (!added) {
+			for (String s : e) {
+				Friend f = api.getFriendById(s);
+				if (f.isOnline()) {
+					typeUsers.put(s, Presence.Type.available);
+					modeUsers.put(s, f.getChatMode().mode);
+					statusUsers.put(s, f.getStatus());
+				} else {
+					typeUsers.put(s, Presence.Type.unavailable);
+				}
+			}
+			added = true;
+		}
 	}
 
 	public void entriesDeleted(Collection<String> e) {
@@ -45,6 +72,7 @@ public class LeagueRosterListener implements RosterListener {
 	public void presenceChanged(Presence p) {
 		String from = p.getFrom();
 		if (from != null) {
+			from = StringUtils.parseBareAddress(from);
 			Friend friend = api.getFriendById(from);
 			if (friend != null) {
 				for (FriendListener l : api.getFriendListeners()) {
@@ -69,15 +97,29 @@ public class LeagueRosterListener implements RosterListener {
 						l.onFriendBusy(friend);
 					}
 
-					String previousStatus = statusUsers.get(from);
-					if (previousStatus == null
-							|| !p.getStatus().equals(previousStatus)) {
-						l.onFriendStatusChange(friend);
+					if (p.getStatus() != null) {
+						try {
+							LolStatus previousStatus = statusUsers.get(from);
+							LolStatus newStatus = new LolStatus(p.getStatus());
+							if (previousStatus != null
+									&& !newStatus.equals(previousStatus)) {
+								l.onFriendStatusChange(friend);
+							}
+						} catch (JDOMException | IOException e) {
+						}
 					}
 
-					typeUsers.put(from, p.getType());
-					modeUsers.put(from, p.getMode());
-					statusUsers.put(from, p.getStatus());
+				}
+
+				typeUsers.put(from, p.getType());
+				modeUsers.put(from, p.getMode());
+				if (p.getStatus() != null) {
+					try {
+						statusUsers.put(from, new LolStatus(p.getStatus()));
+					} catch (JDOMException | IOException e) {
+					}
+				} else {
+					statusUsers.put(from, null);
 				}
 			}
 		}

@@ -1,14 +1,26 @@
-/*******************************************************************************
- * Copyright (c) 2014 Bert De Geyter (https://github.com/TheHolyWaffle).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- * 
- * Contributors:
- *     Bert De Geyter (https://github.com/TheHolyWaffle)
- ******************************************************************************/
 package com.github.theholywaffle.lolchatapi;
+
+/*
+ * #%L
+ * League of Legends XMPP Chat Library
+ * %%
+ * Copyright (C) 2014 Bert De Geyter
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,8 +69,9 @@ public class LolChat {
 	 * @param server
 	 *            The chatserver of the region you want to connect to
 	 * @param acceptFriendRequests
-	 *            True will automatically accept all friend requests. False will ignore all friend requests. NOTE: automatic accepting of requests
-	 *            causes the name of the new friend to be null.
+	 *            True will automatically accept all friend requests. False will
+	 *            ignore all friend requests. NOTE: automatic accepting of
+	 *            requests causes the name of the new friend to be null.
 	 */
 	public LolChat(ChatServer server, boolean acceptFriendRequests) {
 		Roster.setDefaultSubscriptionMode(acceptFriendRequests ? SubscriptionMode.accept_all
@@ -92,16 +105,19 @@ public class LolChat {
 	/**
 	 * Adds a ChatListener that listens to messages from all your friends.
 	 * 
-	 * @param chatListener The ChatListener that you want to add
+	 * @param chatListener
+	 *            The ChatListener that you want to add
 	 */
 	public void addChatListener(ChatListener chatListener) {
 		chatListeners.add(chatListener);
 	}
 
 	/**
-	 * Adds a FriendListener that listens to changes from all your friends. Such as logging in, starting games, ...
+	 * Adds a FriendListener that listens to changes from all your friends. Such
+	 * as logging in, starting games, ...
 	 * 
-	 * @param friendListener The FriendListener that you want to add
+	 * @param friendListener
+	 *            The FriendListener that you want to add
 	 */
 	public void addFriendListener(FriendListener friendListener) {
 		friendListeners.add(friendListener);
@@ -120,8 +136,8 @@ public class LolChat {
 							c.addMessageListener(new MessageListener() {
 
 								@Override
-								public void processMessage(
-										Chat chat, Message msg) {
+								public void processMessage(Chat chat,
+										Message msg) {
 									for (ChatListener c : chatListeners) {
 										if (msg.getType() == Message.Type.chat) {
 											c.onMessage(friend, msg.getBody());
@@ -174,7 +190,8 @@ public class LolChat {
 	 * 
 	 * @param xmppAddress
 	 *            For example sum12345678@pvp.net
-	 * @return The corresponding Friend or null if user is not found or he is not a friend of you
+	 * @return The corresponding Friend or null if user is not found or he is
+	 *         not a friend of you
 	 */
 	public Friend getFriendById(String xmppAddress) {
 		return new Friend(this, connection, connection.getRoster().getEntry(
@@ -186,7 +203,8 @@ public class LolChat {
 	 * 
 	 * @param name
 	 *            The name of your friend, for example "Dyrus"
-	 * @return The corresponding Friend object or null if user is not found or he is not a friend of you
+	 * @return The corresponding Friend object or null if user is not found or
+	 *         he is not a friend of you
 	 */
 	public Friend getFriendByName(String name) {
 		for (Friend f : getFriends()) {
@@ -198,7 +216,8 @@ public class LolChat {
 	}
 
 	/**
-	 * Get a FriendGroup by name, for example "Duo Partners". The name is case sensitive!
+	 * Get a FriendGroup by name, for example "Duo Partners". The name is case
+	 * sensitive!
 	 * 
 	 * @param name
 	 *            The name of your group
@@ -282,9 +301,13 @@ public class LolChat {
 	}
 
 	/**
-	 * Logs in to the chat server without replacing the official connection of the League of Legends client. This call is asynchronous.
-	 * @param username Username of your account
-	 * @param password Password of your account
+	 * Logs in to the chat server without replacing the official connection of
+	 * the League of Legends client. This call is asynchronous.
+	 * 
+	 * @param username
+	 *            Username of your account
+	 * @param password
+	 *            Password of your account
 	 * @return true if login is successful, false otherwise
 	 */
 	public boolean login(String username, String password) {
@@ -294,16 +317,17 @@ public class LolChat {
 	/**
 	 * Logs in to the chat server. This call is asynchronous.
 	 * 
-	 * @param username Username of your account
-	 * @param password Password of your account 
+	 * @param username
+	 *            Username of your account
+	 * @param password
+	 *            Password of your account
 	 * @param replaceLeague
-	 *            True will disconnect you account from the League of Legends client. False allows you to have another connection open next to the official
-	 *            connection in the League of Legends client.
+	 *            True will disconnect you account from the League of Legends
+	 *            client. False allows you to have another connection open next
+	 *            to the official connection in the League of Legends client.
 	 * @return true if login was succesful, false otherwise
 	 */
-	public
-			boolean login(
-					String username, String password, boolean replaceLeague) {
+	public boolean login(String username, String password, boolean replaceLeague) {
 		try {
 			if (replaceLeague) {
 				connection.login(username, "AIR_" + password, "xiff");
@@ -330,7 +354,8 @@ public class LolChat {
 	/**
 	 * Removes the ChatListener from the list and will no longer be called.
 	 * 
-	 * @param chatListener The ChatListener that you want to remove
+	 * @param chatListener
+	 *            The ChatListener that you want to remove
 	 */
 	public void removeChatListener(ChatListener chatListener) {
 		chatListeners.remove(chatListener);
@@ -339,7 +364,8 @@ public class LolChat {
 	/**
 	 * Removes the FriendListener from the list and will no longer be called.
 	 * 
-	 * @param friendListener The FriendListener that you want to remove
+	 * @param friendListener
+	 *            The FriendListener that you want to remove
 	 */
 	public void removeFriendListener(FriendListener friendListener) {
 		friendListeners.remove(friendListener);
@@ -348,7 +374,8 @@ public class LolChat {
 	/**
 	 * Changes your ChatMode (e.g. ingame, away, available)
 	 * 
-	 * @param chatMode The new ChatMode
+	 * @param chatMode
+	 *            The new ChatMode
 	 * @see ChatMode
 	 */
 	public void setChatMode(ChatMode chatMode) {
@@ -377,7 +404,8 @@ public class LolChat {
 	/**
 	 * Update your own status with current level, ranked wins...
 	 * 
-	 * Create an Status object (without constructor arguments) and call the several ".set" methods on it to customise it. Finally pass this Status
+	 * Create an Status object (without constructor arguments) and call the
+	 * several ".set" methods on it to customise it. Finally pass this Status
 	 * object back to this method
 	 * 
 	 * @param status

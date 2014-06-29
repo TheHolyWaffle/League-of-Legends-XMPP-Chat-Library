@@ -1,14 +1,26 @@
-/*******************************************************************************
- * Copyright (c) 2014 Bert De Geyter (https://github.com/TheHolyWaffle).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- * 
- * Contributors:
- *     Bert De Geyter (https://github.com/TheHolyWaffle)
- ******************************************************************************/
 package com.github.theholywaffle.lolchatapi.wrapper;
+
+/*
+ * #%L
+ * League of Legends XMPP Chat Library
+ * %%
+ * Copyright (C) 2014 Bert De Geyter
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +46,11 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	}
 
 	/**
-	 * Moves a friend to this group and removes the friend from his previous group. This is an asynchronous call.
+	 * Moves a friend to this group and removes the friend from his previous
+	 * group. This is an asynchronous call.
 	 * 
 	 * @param friend
+	 *            The friend you want to move
 	 */
 	public void addFriend(Friend friend) {
 		try {
@@ -50,7 +64,8 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	/**
 	 * Checks if a given Friend is part of this group.
 	 * 
-	 * @param friend The friend
+	 * @param friend
+	 *            The friend
 	 * @return True if this group contains the friend, false otherwise.
 	 */
 	public boolean contains(Friend friend) {

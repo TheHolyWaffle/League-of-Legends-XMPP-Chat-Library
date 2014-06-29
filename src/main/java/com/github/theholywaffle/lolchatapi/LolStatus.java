@@ -1,24 +1,38 @@
-/*******************************************************************************
- * Copyright (c) 2014 Bert De Geyter (https://github.com/TheHolyWaffle).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- * 
- * Contributors:
- *     Bert De Geyter (https://github.com/TheHolyWaffle)
- ******************************************************************************/
 package com.github.theholywaffle.lolchatapi;
+
+/*
+ * #%L
+ * League of Legends XMPP Chat Library
+ * %%
+ * Copyright (C) 2014 Bert De Geyter
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Date;
 
+import org.custommonkey.xmlunit.Diff;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.XMLOutputter;
+import org.xml.sax.SAXException;
 
 public class LolStatus {
 
@@ -117,8 +131,9 @@ public class LolStatus {
 	private Document doc;
 
 	/**
-	 *  Generate a default LoLStatus that can later be modified and be used to change the current LolStatus ({@link LolChat#setStatus(LolStatus)})
-	 *  
+	 * Generate a default LoLStatus that can later be modified and be used to
+	 * change the current LolStatus ({@link LolChat#setStatus(LolStatus)})
+	 * 
 	 */
 	public LolStatus() {
 		outputter
@@ -131,6 +146,13 @@ public class LolStatus {
 
 	/**
 	 * This constructor is not intended for usage.
+	 * 
+	 * @param xml
+	 *            An XML string
+	 * @throws JDOMException
+	 *             Is thrown when the xml string is invalid
+	 * @throws IOException
+	 *             Is thrown when the xml string is invalid
 	 */
 	public LolStatus(String xml) throws JDOMException, IOException {
 		outputter
@@ -166,7 +188,7 @@ public class LolStatus {
 	// ///////////
 	// GETTERS //
 	// ///////////
-	
+
 	private int getInt(XMLProperty p) {
 		String value = get(p);
 		if (value.isEmpty()) {
@@ -190,7 +212,7 @@ public class LolStatus {
 	// ///////////
 	// SETTERS //
 	// ///////////
-	
+
 	private void setElement(XMLProperty p, long value) {
 		setElement(p, String.valueOf(value));
 	}
@@ -349,8 +371,6 @@ public class LolStatus {
 		return this;
 	}
 
-	
-
 	// ///////////
 	// SETTERS //
 	// ///////////
@@ -474,6 +494,25 @@ public class LolStatus {
 	@Override
 	public String toString() {
 		return outputter.outputString(doc.getRootElement());
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other == this)
+			return true;
+		if (!(other instanceof LolStatus))
+			return false;
+		LolStatus otherStatus = (LolStatus) other;
+		Diff diff;
+		try {
+			diff = new Diff(otherStatus.toString(), toString());
+			return diff.similar();
+		} catch (SAXException | IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

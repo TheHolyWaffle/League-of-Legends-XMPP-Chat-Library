@@ -1,14 +1,26 @@
-/*******************************************************************************
- * Copyright (c) 2014 Bert De Geyter (https://github.com/TheHolyWaffle).
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the GNU Public License v3.0
- * which accompanies this distribution, and is available at
- * http://www.gnu.org/licenses/gpl.html
- * 
- * Contributors:
- *     Bert De Geyter (https://github.com/TheHolyWaffle)
- ******************************************************************************/
 package com.github.theholywaffle.lolchatapi.wrapper;
+
+/*
+ * #%L
+ * League of Legends XMPP Chat Library
+ * %%
+ * Copyright (C) 2014 Bert De Geyter
+ * %%
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public
+ * License along with this program.  If not, see
+ * <http://www.gnu.org/licenses/gpl-3.0.html>.
+ * #L%
+ */
 
 import java.io.IOException;
 
@@ -55,14 +67,15 @@ public class Friend extends Wrapper<RosterEntry> {
 		try {
 			con.getRoster().removeEntry(get());
 			return true;
-		} catch (XMPPException | NotLoggedInException | NoResponseException | NotConnectedException e) {
+		} catch (XMPPException | NotLoggedInException | NoResponseException
+				| NotConnectedException e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 
 	private Chat getChat() {
-		if (chat == null) {			
+		if (chat == null) {
 			chat = ChatManager.getInstanceFor(con).createChat(getUserId(),
 					new MessageListener() {
 
@@ -79,8 +92,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	}
 
 	/**
-	 * Returns the current ChatMode of this friend (e.g. away, busy,
-	 * available)
+	 * Returns the current ChatMode of this friend (e.g. away, busy, available)
 	 * 
 	 * @see ChatMode
 	 * @return ChatMode of this friend
@@ -153,6 +165,8 @@ public class Friend extends Wrapper<RosterEntry> {
 	/**
 	 * Sends a message to this friend
 	 * 
+	 * @param message
+	 *            The message you want to send
 	 */
 	public void sendMessage(String message) {
 		try {
@@ -170,6 +184,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * This ChatListener gets called when this Friend only sends you a message.
 	 * 
 	 * @param message
+	 *            The message you want to send
 	 * @param listener
 	 *            Your new active ChatListener
 	 */
@@ -190,6 +205,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * This ChatListener gets called when this Friend only sends you a message.
 	 * 
 	 * @param listener
+	 *            The ChatListener you want to assign to this Friend
 	 */
 	public void setChatListener(ChatListener listener) {
 		this.listener = listener;
