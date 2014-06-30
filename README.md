@@ -15,7 +15,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 * Create a maven project.
 * Add the following to your pom.xml
-```
+```xml
 	<repositories>
 		<repository>
 			<id>League-of-Legends-XMPP-Chat-Library-mvn-repo</id>
@@ -70,4 +70,4 @@ if (api.login("myusername", "mypassword")) {
 Please let me know them [here](../../issues). I'll help you out as soon as I can.
 
 ___
-*“This product is not endorsed, certified or otherwise approved in any way by Riot Games, Inc. or any of its affiliates.”*
+*ï¿½This product is not endorsed, certified or otherwise approved in any way by Riot Games, Inc. or any of its affiliates.ï¿½*
