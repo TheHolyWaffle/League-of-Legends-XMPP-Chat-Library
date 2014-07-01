@@ -15,24 +15,25 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 * Create a maven project.
 * Add the following to your pom.xml
-```
-	<repositories>
-		<repository>
-			<id>League-of-Legends-XMPP-Chat-Library-mvn-repo</id>
-			<url>https://raw.githubusercontent.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-			<groupId>com.github.theholywaffle</groupId>
-			<artifactId>lolchatapi</artifactId>
-			<version>[1.0.0,2.0.0)</version>
-		</dependency>
-	</dependencies>
+```xml
+<repositories>
+	<repository>
+		<id>League-of-Legends-XMPP-Chat-Library-mvn-repo</id>
+		<url>https://raw.githubusercontent.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/mvn-repo/</url>
+		<snapshots>
+			<enabled>true</enabled>
+			<updatePolicy>always</updatePolicy>
+		</snapshots>
+	</repository>
+</repositories>
+
+<dependencies>
+	<dependency>
+		<groupId>com.github.theholywaffle</groupId>
+		<artifactId>lolchatapi</artifactId>
+		<version>[1.0.0,2.0.0)</version>
+	</dependency>
+</dependencies>
 ```
 * To use this api you have to create a [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/main/java/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
 * Do what you want with this [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object (see examples).
@@ -40,7 +41,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 **Example:**
 
 ```java
-LolChat api = new LolChat(ChatServer.EUW, false);
+LolChat api = new LolChat(ChatServer.EUW);
 if (api.login("myusername", "mypassword")) {
 
 	// Example 1: Send Chat Message to all your friends
@@ -48,15 +49,23 @@ if (api.login("myusername", "mypassword")) {
 		f.sendMessage("Hello " + f.getName());
 	}
 
-	// Example 2: Send Chat Message to all your friends and wait for an response
+	// Example 2: Send Chat Message to all your friends and wait for an
+	// response
 	for (Friend f : api.getFriends()) {
 		f.sendMessage("Hello " + f.getName(), new ChatListener() {
 
 			@Override
 			public void onMessage(Friend friend, String message) {
-				System.out.println("Friend " + friend.getName() + " responded back to me!");
+				System.out.println("Friend " + friend.getName()
+						+ " responded to my Hello World!");
 			}
 		});
+	}
+
+	// Example3: Send Chat Message to an specific friend
+	Friend f = api.getFriendByName("Dyrus");
+	if (f != null && f.isOnline()) {
+		f.sendMessage("Hi, I'm your biggest fan!");
 	}
 }
 ```

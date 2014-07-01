@@ -23,6 +23,10 @@ import java.security.cert.CertificateException;
  */
 public class DummySSLSocketFactory extends SSLSocketFactory {
 
+	public static SocketFactory getDefault() {
+		return new DummySSLSocketFactory();
+	}
+
 	private SSLSocketFactory factory;
 
 	public DummySSLSocketFactory() {
@@ -41,13 +45,8 @@ public class DummySSLSocketFactory extends SSLSocketFactory {
 		}
 	}
 
-	public static SocketFactory getDefault() {
-		return new DummySSLSocketFactory();
-	}
-
-	public Socket createSocket(Socket socket, String s, int i, boolean flag)
-			throws IOException {
-		return factory.createSocket(socket, s, i, flag);
+	public Socket createSocket(InetAddress inaddr, int i) throws IOException {
+		return factory.createSocket(inaddr, i);
 	}
 
 	public Socket createSocket(InetAddress inaddr, int i, InetAddress inaddr2,
@@ -55,17 +54,18 @@ public class DummySSLSocketFactory extends SSLSocketFactory {
 		return factory.createSocket(inaddr, i, inaddr2, j);
 	}
 
-	public Socket createSocket(InetAddress inaddr, int i) throws IOException {
-		return factory.createSocket(inaddr, i);
+	public Socket createSocket(Socket socket, String s, int i, boolean flag)
+			throws IOException {
+		return factory.createSocket(socket, s, i, flag);
+	}
+
+	public Socket createSocket(String s, int i) throws IOException {
+		return factory.createSocket(s, i);
 	}
 
 	public Socket createSocket(String s, int i, InetAddress inaddr, int j)
 			throws IOException {
 		return factory.createSocket(s, i, inaddr, j);
-	}
-
-	public Socket createSocket(String s, int i) throws IOException {
-		return factory.createSocket(s, i);
 	}
 
 	public String[] getDefaultCipherSuites() {
@@ -83,6 +83,20 @@ public class DummySSLSocketFactory extends SSLSocketFactory {
  */
 class DummyTrustManager implements X509TrustManager {
 
+	public void checkClientTrusted(X509Certificate[] x509Certificates, String s)
+			throws CertificateException {
+		// Do nothing for now.
+	}
+
+	public void checkServerTrusted(X509Certificate[] x509Certificates, String s)
+			throws CertificateException {
+		// Do nothing for now.
+	}
+
+	public X509Certificate[] getAcceptedIssuers() {
+		return new X509Certificate[0];
+	}
+
 	public boolean isClientTrusted(X509Certificate[] cert) {
 		return true;
 	}
@@ -96,19 +110,5 @@ class DummyTrustManager implements X509TrustManager {
 		} catch (CertificateNotYetValidException e) {
 			return false;
 		}
-	}
-
-	public void checkClientTrusted(X509Certificate[] x509Certificates, String s)
-			throws CertificateException {
-		// Do nothing for now.
-	}
-
-	public void checkServerTrusted(X509Certificate[] x509Certificates, String s)
-			throws CertificateException {
-		// Do nothing for now.
-	}
-
-	public X509Certificate[] getAcceptedIssuers() {
-		return new X509Certificate[0];
 	}
 }

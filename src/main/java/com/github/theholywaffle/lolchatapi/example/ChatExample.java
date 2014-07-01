@@ -12,7 +12,7 @@ public class ChatExample {
 	}
 
 	public ChatExample() {
-		LolChat api = new LolChat(ChatServer.EUW, false);
+		LolChat api = new LolChat(ChatServer.EUW);
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Send Chat Message to all your friends

@@ -28,6 +28,7 @@ import java.util.HashMap;
 
 import org.jdom2.JDOMException;
 import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.util.StringUtils;
 
@@ -42,9 +43,11 @@ public class LeagueRosterListener implements RosterListener {
 	private LolChat api;
 
 	private boolean added;
+	private XMPPConnection connection;
 
-	public LeagueRosterListener(LolChat api) {
+	public LeagueRosterListener(LolChat api, XMPPConnection connection) {
 		this.api = api;
+		this.connection = connection;
 	}
 
 	public void entriesAdded(Collection<String> e) {
@@ -61,17 +64,24 @@ public class LeagueRosterListener implements RosterListener {
 			}
 			added = true;
 		}
+		System.out.println("Entries added"); // TODO remove
 	}
 
 	public void entriesDeleted(Collection<String> e) {
+		System.out.println("Entries deleted"); // TODO remove
 	}
 
 	public void entriesUpdated(Collection<String> e) {
 	}
 
+	public boolean isLoaded() {
+		return added;
+	}
+
 	public void presenceChanged(Presence p) {
 		String from = p.getFrom();
 		if (from != null) {
+			p = connection.getRoster().getPresence(p.getFrom());
 			from = StringUtils.parseBareAddress(from);
 			Friend friend = api.getFriendById(from);
 			if (friend != null) {
@@ -121,10 +131,6 @@ public class LeagueRosterListener implements RosterListener {
 				}
 			}
 		}
-	}
-
-	public boolean isLoaded() {
-		return added;
 	}
 
 }

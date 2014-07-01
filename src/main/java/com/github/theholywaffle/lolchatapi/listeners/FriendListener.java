@@ -27,22 +27,6 @@ import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 public interface FriendListener {
 
 	/**
-	 * Gets called when a friend logs out.
-	 * 
-	 * @param friend
-	 *            The friend who logs out
-	 */
-	public void onFriendLeave(Friend friend);
-
-	/**
-	 * Gets called when a friend logs in.
-	 * 
-	 * @param friend
-	 *            The friend who logs in
-	 */
-	public void onFriendJoin(Friend friend);
-
-	/**
 	 * Gets called when a friends chat is available (green circle)
 	 * 
 	 * @param friend
@@ -66,6 +50,22 @@ public interface FriendListener {
 	 *            The friend who becomes busy
 	 */
 	public void onFriendBusy(Friend friend);
+
+	/**
+	 * Gets called when a friend logs in.
+	 * 
+	 * @param friend
+	 *            The friend who logs in
+	 */
+	public void onFriendJoin(Friend friend);
+
+	/**
+	 * Gets called when a friend logs out.
+	 * 
+	 * @param friend
+	 *            The friend who logs out
+	 */
+	public void onFriendLeave(Friend friend);
 
 	/**
 	 * Gets called when the status of a friend changes. This can happen when he

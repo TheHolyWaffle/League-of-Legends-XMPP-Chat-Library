@@ -11,7 +11,7 @@ public class OnlineOfflineExample {
 	}
 
 	public OnlineOfflineExample() {
-		LolChat api = new LolChat(ChatServer.EUW, false);
+		LolChat api = new LolChat(ChatServer.EUW);
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: appear offline

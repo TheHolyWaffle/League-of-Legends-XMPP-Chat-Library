@@ -7,6 +7,10 @@ import com.github.theholywaffle.lolchatapi.LolStatus.Queue;
 import com.github.theholywaffle.lolchatapi.LolStatus.Tier;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 
+/**
+ * This example shows how you can modify your own LolStatus.
+ *
+ */
 public class LolStatusExample {
 
 	public static void main(String[] args) {
@@ -14,7 +18,7 @@ public class LolStatusExample {
 	}
 
 	public LolStatusExample() {
-		LolChat api = new LolChat(ChatServer.EUW, false);
+		LolChat api = new LolChat(ChatServer.EUW);
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Print out all groups and all friends in those groups

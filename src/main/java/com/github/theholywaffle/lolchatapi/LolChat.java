@@ -24,7 +24,6 @@ package com.github.theholywaffle.lolchatapi;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.jivesoftware.smack.Chat;
@@ -33,22 +32,29 @@ import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterGroup;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.filter.PacketFilter;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.spark.util.DummySSLSocketFactory;
 
+import com.github.theholywaffle.lolchatapi.example.LolStatusExample;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
+import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
+import com.github.theholywaffle.lolchatapi.wrapper.Friend.FriendStatus;
 import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
 
 public class LolChat {
@@ -62,20 +68,36 @@ public class LolChat {
 	private Presence.Type type = Presence.Type.available;
 	private Presence.Mode mode = Presence.Mode.chat;
 	private LeagueRosterListener leagueRosterListener;
+	private LeaguePacketListener leaguePacketListener;
+	private FriendRequestPolicy friendRequestPolicy;
+
+	/**
+	 * Represents a single connection to a League of Legends chatserver. Default
+	 * FriendRequestPolicy is {@link FriendRequestPolicy#ACCEPT_ALL}.
+	 * 
+	 * @see FriendRequestPolicy
+	 * 
+	 * @param server
+	 *            The chatserver of the region you want to connect to
+	 */
+	public LolChat(ChatServer server) {
+		this(server, FriendRequestPolicy.ACCEPT_ALL);
+	}
 
 	/**
 	 * Represents a single connection to a League of Legends chatserver.
 	 * 
 	 * @param server
 	 *            The chatserver of the region you want to connect to
-	 * @param acceptFriendRequests
-	 *            True will automatically accept all friend requests. False will
-	 *            ignore all friend requests. NOTE: automatic accepting of
-	 *            requests causes the name of the new friend to be null.
+	 * @param friendRequestPolicy
+	 *            Determines how new Friend requests are treated.
+	 * 
+	 * @see LolChat#setFriendRequestPolicy(FriendRequestPolicy)
+	 * @see LolChat#setFriendRequestListener(FriendRequestListener)
 	 */
-	public LolChat(ChatServer server, boolean acceptFriendRequests) {
-		Roster.setDefaultSubscriptionMode(acceptFriendRequests ? SubscriptionMode.accept_all
-				: SubscriptionMode.manual);
+	public LolChat(ChatServer server, FriendRequestPolicy friendRequestPolicy) {
+		this.friendRequestPolicy = friendRequestPolicy;
+		Roster.setDefaultSubscriptionMode(friendRequestPolicy.mode);
 		ConnectionConfiguration config = new ConnectionConfiguration(
 				server.host, 5223, "pvp.net");
 		config.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
@@ -125,7 +147,8 @@ public class LolChat {
 
 	private void addListeners() {
 		connection.getRoster().addRosterListener(
-				leagueRosterListener = new LeagueRosterListener(this));
+				leagueRosterListener = new LeagueRosterListener(this,
+						connection));
 		ChatManager.getInstanceFor(connection).addChatListener(
 				new ChatManagerListener() {
 
@@ -152,6 +175,61 @@ public class LolChat {
 
 					}
 				});
+	}
+
+	/**
+	 * Sends an friend request to an other user.
+	 * 
+	 * @param userId
+	 *            The userId of the user you want to add.
+	 */
+	public void addUser(String userId) {
+		addUser(userId, null, getDefaultFriendGroup());
+	}
+
+	/**
+	 * Sends an friend request to an other user.
+	 * 
+	 * @param userId
+	 *            The userId of the user you want to add.
+	 * @param friendGroup
+	 *            The FriendGroup you want to put this user in.
+	 */
+	public void addUser(String userId, FriendGroup friendGroup) {
+		addUser(userId, null, friendGroup);
+	}
+
+	/**
+	 * Sends an friend request to an other user.
+	 * 
+	 * @param userId
+	 *            The userId of the user you want to add.
+	 * @param name
+	 *            The name you want to assign to this user.
+	 */
+	public void addUser(String userId, String name) {
+		addUser(userId, name, getDefaultFriendGroup());
+	}
+
+	/**
+	 * Sends an friend request to an other user.
+	 * 
+	 * @param userId
+	 *            The userId of the user you want to add.
+	 * @param name
+	 *            The name you want to assign to this user.
+	 * @param friendGroup
+	 *            The FriendGroup you want to put this user in.
+	 */
+	public void addUser(String userId, String name, FriendGroup friendGroup) {
+		try {
+			connection.getRoster().createEntry(
+					StringUtils.parseBareAddress(userId), name,
+					new String[] { friendGroup.getName() });
+		} catch (NotLoggedInException | NoResponseException
+				| XMPPErrorException | NotConnectedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -182,7 +260,29 @@ public class LolChat {
 	 * @return default FriendGroup
 	 */
 	public FriendGroup getDefaultFriendGroup() {
-		return getFriendGroupByName("**Default");
+		FriendGroup group = getFriendGroupByName("**Default");
+		if (group != null) {
+			return group;
+		}
+		return new FriendGroup(this, connection, connection.getRoster()
+				.createGroup("**Default"));
+	}
+
+	/**
+	 * Gets a friend based on a given filter
+	 * 
+	 * @param filter
+	 *            The filter defines conditions that your Friend must meet.
+	 * @return The first Friend that meets the conditions or null if not found.
+	 */
+	public Friend getFriend(Filter<Friend> filter) {
+		for (RosterEntry e : connection.getRoster().getEntries()) {
+			Friend f = new Friend(this, connection, e);
+			if (filter.accept(f)) {
+				return f;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -206,13 +306,14 @@ public class LolChat {
 	 * @return The corresponding Friend object or null if user is not found or
 	 *         he is not a friend of you
 	 */
-	public Friend getFriendByName(String name) {
-		for (Friend f : getFriends()) {
-			if (f.getName().equalsIgnoreCase(name)) {
-				return f;
+	public Friend getFriendByName(final String name) {
+		return getFriend(new Filter<Friend>() {
+
+			public boolean accept(Friend friend) {
+				return friend.getName() != null
+						&& friend.getName().equalsIgnoreCase(name);
 			}
-		}
-		return null;
+		});
 	}
 
 	/**
@@ -254,14 +355,42 @@ public class LolChat {
 	}
 
 	/**
+	 * Gets the current FriendRequestPolicy.
+	 * 
+	 * @return The current FriendRequestPolicy
+	 */
+	public FriendRequestPolicy getFriendRequestPolicy() {
+		return friendRequestPolicy;
+	}
+
+	/**
 	 * Get all your friends, both online and offline
 	 * 
 	 * @return A List of all your Friends
 	 */
 	public List<Friend> getFriends() {
+		return getFriends(new Filter<Friend>() {
+
+			public boolean accept(Friend e) {
+				return true;
+			}
+		});
+	}
+
+	/**
+	 * Gets a list of your friends based on a given filter
+	 * 
+	 * @param filter
+	 *            The filter defines conditions that your Friends must meet.
+	 * @return A List of your Friends that meet the condition of your Filter
+	 */
+	public List<Friend> getFriends(Filter<Friend> filter) {
 		ArrayList<Friend> friends = new ArrayList<>();
 		for (RosterEntry e : connection.getRoster().getEntries()) {
-			friends.add(new Friend(this, connection, e));
+			Friend f = new Friend(this, connection, e);
+			if (filter.accept(f)) {
+				friends.add(f);
+			}
 		}
 		return friends;
 	}
@@ -272,15 +401,12 @@ public class LolChat {
 	 * @return A list of all your offline Friends
 	 */
 	public List<Friend> getOfflineFriends() {
-		List<Friend> f = getFriends();
-		Iterator<Friend> i = f.iterator();
-		while (i.hasNext()) {
-			Friend friend = i.next();
-			if (friend.isOnline()) {
-				i.remove();
+		return getFriends(new Filter<Friend>() {
+
+			public boolean accept(Friend friend) {
+				return !friend.isOnline();
 			}
-		}
-		return f;
+		});
 	}
 
 	/**
@@ -289,20 +415,34 @@ public class LolChat {
 	 * @return A list of all your online Friends
 	 */
 	public List<Friend> getOnlineFriends() {
-		List<Friend> f = getFriends();
-		Iterator<Friend> i = f.iterator();
-		while (i.hasNext()) {
-			Friend friend = i.next();
-			if (!friend.isOnline()) {
-				i.remove();
+		return getFriends(new Filter<Friend>() {
+
+			public boolean accept(Friend friend) {
+				return friend.isOnline();
 			}
-		}
-		return f;
+		});
+	}
+
+	/**
+	 * Gets a list of user that you've sent friend requests but haven't answered
+	 * yet.
+	 * 
+	 * @return A list of Friends.
+	 */
+	public List<Friend> getPendingFriendRequests() {
+		return getFriends(new Filter<Friend>() {
+
+			public boolean accept(Friend friend) {
+				return friend.getFriendStatus() == FriendStatus.ADD_REQUEST_PENDING;
+			}
+		});
 	}
 
 	/**
 	 * Logs in to the chat server without replacing the official connection of
 	 * the League of Legends client. This call is asynchronous.
+	 * BEWARE: add/set all listeners before logging in, otherwise some offline
+	 * messages can get lost.
 	 * 
 	 * @param username
 	 *            Username of your account
@@ -316,6 +456,9 @@ public class LolChat {
 
 	/**
 	 * Logs in to the chat server. This call is asynchronous.
+	 * 
+	 * BEWARE: add/set all listeners before logging in, otherwise some offline
+	 * messages can get lost.
 	 * 
 	 * @param username
 	 *            Username of your account
@@ -372,7 +515,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Changes your ChatMode (e.g. ingame, away, available)
+	 * Changes your ChatMode (e.g. busy, away, available)
 	 * 
 	 * @param chatMode
 	 *            The new ChatMode
@@ -381,6 +524,55 @@ public class LolChat {
 	public void setChatMode(ChatMode chatMode) {
 		this.mode = chatMode.mode;
 		updateStatus();
+	}
+
+	/**
+	 * Changes the current FriendRequestListener. It is recommended to do this
+	 * before logging in.
+	 * 
+	 * @param friendRequestListener
+	 *            The new FriendRequestListener
+	 */
+	public void setFriendRequestListener(
+			FriendRequestListener friendRequestListener) {
+		if (leaguePacketListener == null) {
+			leaguePacketListener = new LeaguePacketListener(this, connection);
+			leaguePacketListener
+					.setFriendRequestListener(friendRequestListener);
+			connection.addPacketListener(leaguePacketListener,
+					new PacketFilter() {
+						public boolean accept(Packet packet) {
+							if (packet instanceof Presence) {
+								Presence presence = (Presence) packet;
+								if (presence.getType().equals(
+										Presence.Type.subscribed)
+										|| presence.getType().equals(
+												Presence.Type.subscribe)
+										|| presence.getType().equals(
+												Presence.Type.unsubscribed)
+										|| presence.getType().equals(
+												Presence.Type.unsubscribe)) {
+									return true;
+								}
+							}
+							return false;
+						}
+					});
+		} else {
+			leaguePacketListener
+					.setFriendRequestListener(friendRequestListener);
+		}
+	}
+
+	/**
+	 * Changes the the current FriendRequestPolicy.
+	 * 
+	 * @param friendRequestPolicy
+	 *            The new FriendRequestPolicy
+	 * @see FriendRequestPolicy
+	 */
+	public void setFriendRequestPolicy(FriendRequestPolicy friendRequestPolicy) {
+		connection.getRoster().setSubscriptionMode(friendRequestPolicy.mode);
 	}
 
 	/**
@@ -405,12 +597,13 @@ public class LolChat {
 	 * Update your own status with current level, ranked wins...
 	 * 
 	 * Create an Status object (without constructor arguments) and call the
-	 * several ".set" methods on it to customise it. Finally pass this Status
-	 * object back to this method
+	 * several ".set" methods to customise it. After that pass this Status
+	 * object back to this method.
 	 * 
 	 * @param status
 	 *            Your custom Status object
 	 * @see LolStatus
+	 * @see LolStatusExample
 	 */
 	public void setStatus(LolStatus status) {
 		this.status = status.toString();

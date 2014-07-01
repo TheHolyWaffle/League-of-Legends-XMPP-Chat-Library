@@ -174,6 +174,25 @@ public class LolStatus {
 		}
 	}
 
+	@Override
+	public boolean equals(Object other) {
+		if (other == null)
+			return false;
+		if (other == this)
+			return true;
+		if (!(other instanceof LolStatus))
+			return false;
+		LolStatus otherStatus = (LolStatus) other;
+		Diff diff;
+		try {
+			diff = new Diff(otherStatus.toString(), toString());
+			return diff.similar();
+		} catch (SAXException | IOException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 	private String get(XMLProperty p) {
 		Element child = getElement(p);
 		if (child == null) {
@@ -182,45 +201,9 @@ public class LolStatus {
 		return child.getValue();
 	}
 
-	private Element getElement(XMLProperty p) {
-		return doc.getRootElement().getChild(p.toString());
-	}
-
 	// ///////////
 	// GETTERS //
 	// ///////////
-
-	private int getInt(XMLProperty p) {
-		String value = get(p);
-		if (value.isEmpty()) {
-			return -1;
-		}
-		return Integer.parseInt(value);
-	}
-
-	private long getLong(XMLProperty p) {
-		String value = get(p);
-		if (value.isEmpty()) {
-			return -1L;
-		}
-		return Long.parseLong(value);
-	}
-
-	private void setElement(XMLProperty p, int value) {
-		setElement(p, String.valueOf(value));
-	}
-
-	// ///////////
-	// SETTERS //
-	// ///////////
-
-	private void setElement(XMLProperty p, long value) {
-		setElement(p, String.valueOf(value));
-	}
-
-	private void setElement(XMLProperty p, String value) {
-		getElement(p).setText(value);
-	}
 
 	public int getDominionLeaves() {
 		return getInt(XMLProperty.odinLeaves);
@@ -229,6 +212,14 @@ public class LolStatus {
 	public int getDominionWins() {
 		return getInt(XMLProperty.odinWins);
 	}
+
+	private Element getElement(XMLProperty p) {
+		return doc.getRootElement().getChild(p.toString());
+	}
+
+	// ///////////
+	// SETTERS //
+	// ///////////
 
 	public String getFeaturedGameData() {
 		return get(XMLProperty.featuredGameData);
@@ -252,17 +243,33 @@ public class LolStatus {
 		return null;
 	}
 
-	// ///////////
-	// GETTERS //
-	// ///////////
+	private int getInt(XMLProperty p) {
+		String value = get(p);
+		if (value.isEmpty()) {
+			return -1;
+		}
+		return Integer.parseInt(value);
+	}
 
 	public int getLevel() {
 		return getInt(XMLProperty.level);
 	}
 
+	private long getLong(XMLProperty p) {
+		String value = get(p);
+		if (value.isEmpty()) {
+			return -1L;
+		}
+		return Long.parseLong(value);
+	}
+
 	public int getNormalLeaves() {
 		return getInt(XMLProperty.leaves);
 	}
+
+	// ///////////
+	// GETTERS //
+	// ///////////
 
 	public int getNormalWins() {
 		return getInt(XMLProperty.wins);
@@ -372,9 +379,21 @@ public class LolStatus {
 		return this;
 	}
 
+	private void setElement(XMLProperty p, int value) {
+		setElement(p, String.valueOf(value));
+	}
+
+	private void setElement(XMLProperty p, long value) {
+		setElement(p, String.valueOf(value));
+	}
+
 	// ///////////
 	// SETTERS //
 	// ///////////
+
+	private void setElement(XMLProperty p, String value) {
+		getElement(p).setText(value);
+	}
 
 	public LolStatus setFeaturedGameData(String data) {
 		setElement(XMLProperty.featuredGameData, data);
@@ -495,25 +514,6 @@ public class LolStatus {
 	@Override
 	public String toString() {
 		return outputter.outputString(doc.getRootElement());
-	}
-
-	@Override
-	public boolean equals(Object other) {
-		if (other == null)
-			return false;
-		if (other == this)
-			return true;
-		if (!(other instanceof LolStatus))
-			return false;
-		LolStatus otherStatus = (LolStatus) other;
-		Diff diff;
-		try {
-			diff = new Diff(otherStatus.toString(), toString());
-			return diff.similar();
-		} catch (SAXException | IOException e) {
-			e.printStackTrace();
-		}
-		return false;
 	}
 
 }

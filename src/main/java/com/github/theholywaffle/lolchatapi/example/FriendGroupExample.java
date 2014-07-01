@@ -12,7 +12,7 @@ public class FriendGroupExample {
 	}
 
 	public FriendGroupExample() {
-		LolChat api = new LolChat(ChatServer.EUW, false);
+		LolChat api = new LolChat(ChatServer.EUW);
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Print out all groups and all friends in those groups

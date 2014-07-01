@@ -37,6 +37,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
+import org.jivesoftware.smack.packet.RosterPacket.ItemStatus;
 
 import com.github.theholywaffle.lolchatapi.ChatMode;
 import com.github.theholywaffle.lolchatapi.LolChat;
@@ -49,8 +50,33 @@ import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
  */
 public class Friend extends Wrapper<RosterEntry> {
 
+	public enum FriendStatus {
+
+		/**
+		 * You are both friends
+		 */
+		MUTUAL_FRIENDS(null),
+
+		/**
+		 * A request to be added is pending
+		 */
+		ADD_REQUEST_PENDING(ItemStatus.subscribe),
+		/**
+		 * A request to be removed is pending
+		 */
+		REMOVE_REQUEST_PENDING(ItemStatus.unsubscribe);
+
+		public ItemStatus status;
+
+		FriendStatus(ItemStatus status) {
+			this.status = status;
+		}
+
+	}
+
 	private Friend instance = null;
 	private Chat chat = null;
+
 	private ChatListener listener = null;
 
 	public Friend(LolChat api, XMPPConnection connection, RosterEntry entry) {
@@ -108,6 +134,21 @@ public class Friend extends Wrapper<RosterEntry> {
 	}
 
 	/**
+	 * Gets the relation between you and this friend.
+	 * 
+	 * @return The FriendStatus
+	 * @see FriendStatus
+	 */
+	public FriendStatus getFriendStatus() {
+		for (FriendStatus status : FriendStatus.values()) {
+			if (status.status == get().getStatus()) {
+				return status;
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Gets the FriendGroup that contains this friend.
 	 * 
 	 * @return the FriendGroup that currently contains this Friend
@@ -119,10 +160,14 @@ public class Friend extends Wrapper<RosterEntry> {
 	/**
 	 * Gets the name of this friend.
 	 * 
-	 * @return name of this Friend (e.g. Dyrus)
+	 * @return name of this Friend or an empty String if no name is assigned.
 	 */
 	public String getName() {
-		return get().getName();
+		String name = get().getName();
+		if (name != null) {
+			return name;
+		}
+		return "";
 	}
 
 	/**
@@ -210,5 +255,19 @@ public class Friend extends Wrapper<RosterEntry> {
 	public void setChatListener(ChatListener listener) {
 		this.listener = listener;
 		getChat();
+	}
+
+	/**
+	 * Changes the name of this Friend.
+	 * 
+	 * @param name
+	 *            The new name for this Friend
+	 */
+	public void setName(String name) {
+		try {
+			get().setName(name);
+		} catch (NotConnectedException e) {
+			e.printStackTrace();
+		}
 	}
 }
