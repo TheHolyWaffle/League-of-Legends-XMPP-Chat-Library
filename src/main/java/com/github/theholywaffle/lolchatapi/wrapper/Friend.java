@@ -49,7 +49,7 @@ import com.github.theholywaffle.lolchatapi.LolStatus;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 
 /**
- * Represents a friend of your friendlist
+ * Represents a friend of your friendlist.
  *
  */
 public class Friend extends Wrapper<RosterEntry> {
@@ -57,16 +57,16 @@ public class Friend extends Wrapper<RosterEntry> {
 	public enum FriendStatus {
 
 		/**
-		 * You are both friends
+		 * You are both friends.
 		 */
 		MUTUAL_FRIENDS(null),
 
 		/**
-		 * A request to be added is pending
+		 * A request to be added is pending.
 		 */
 		ADD_REQUEST_PENDING(ItemStatus.subscribe),
 		/**
-		 * A request to be removed is pending
+		 * A request to be removed is pending.
 		 */
 		REMOVE_REQUEST_PENDING(ItemStatus.unsubscribe);
 
@@ -122,7 +122,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	}
 
 	/**
-	 * Returns the current ChatMode of this friend (e.g. away, busy, available)
+	 * Returns the current ChatMode of this friend (e.g. away, busy, available).
 	 * 
 	 * @see ChatMode
 	 * @return ChatMode of this friend

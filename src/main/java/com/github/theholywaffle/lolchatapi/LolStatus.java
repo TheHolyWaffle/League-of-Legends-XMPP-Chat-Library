@@ -137,7 +137,7 @@ public class LolStatus {
 
 	/**
 	 * Generate a default LoLStatus that can later be modified and be used to
-	 * change the current LolStatus ({@link LolChat#setStatus(LolStatus)})
+	 * change the current LolStatus ({@link LolChat#setStatus(LolStatus)}).
 	 * 
 	 */
 	public LolStatus() {
@@ -318,7 +318,7 @@ public class LolStatus {
 	}
 
 	/**
-	 * Seems like an unused variable of Riot
+	 * Seems like an unused variable of Riot.
 	 * 
 	 * @return 0
 	 */
@@ -328,7 +328,7 @@ public class LolStatus {
 	}
 
 	/**
-	 * Seems like an unused variable of Riot
+	 * Seems like an unused variable of Riot.
 	 * 
 	 * @return 0
 	 */

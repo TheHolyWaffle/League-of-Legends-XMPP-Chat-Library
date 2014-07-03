@@ -31,7 +31,7 @@ import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 public interface ChatListener {
 
 	/**
-	 * Gets called when a friend sends you a message
+	 * Gets called when a friend sends you a message.
 	 * 
 	 * @param friend
 	 *            The sender

@@ -40,7 +40,7 @@ import org.jivesoftware.smack.util.StringUtils;
 import com.github.theholywaffle.lolchatapi.LolChat;
 
 /**
- * Represents a group that can contain multiple friends
+ * Represents a group that can contain multiple friends.
  *
  */
 public class FriendGroup extends Wrapper<RosterGroup> {
@@ -83,7 +83,7 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	}
 
 	/**
-	 * Gets a list of all Friends in this FriendGroup
+	 * Gets a list of all Friends in this FriendGroup.
 	 * 
 	 * @return list of all Friends in this group
 	 */

@@ -42,7 +42,7 @@ public enum FriendRequestPolicy {
 	 */
 	REJECT_ALL(SubscriptionMode.reject_all),
 	/**
-	 * Accepts new Friend requests based on your FriendRequestListener
+	 * Accepts new Friend requests based on your FriendRequestListener. See {@link LolChat#setFriendRequestListener(FriendRequestListener)}.
 	 * 
 	 * @see FriendRequestListener
 	 */

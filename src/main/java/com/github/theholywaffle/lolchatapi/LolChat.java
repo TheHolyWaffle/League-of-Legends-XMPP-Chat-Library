@@ -258,7 +258,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Gets the default FriendGroup
+	 * Gets the default FriendGroup.
 	 * 
 	 * @return default FriendGroup
 	 */
@@ -272,7 +272,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Gets a friend based on a given filter
+	 * Gets a friend based on a given filter.
 	 * 
 	 * @param filter
 	 *            The filter defines conditions that your Friend must meet.
@@ -289,7 +289,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Gets a friend based on his XMPPAddress
+	 * Gets a friend based on his XMPPAddress.
 	 * 
 	 * @param xmppAddress
 	 *            For example sum12345678@pvp.net
@@ -336,7 +336,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Get a list of all your FriendGroups
+	 * Get a list of all your FriendGroups.
 	 * 
 	 * @return A List of all your FriendGroups
 	 */
@@ -367,7 +367,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Get all your friends, both online and offline
+	 * Get all your friends, both online and offline.
 	 * 
 	 * @return A List of all your Friends
 	 */
@@ -381,7 +381,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Gets a list of your friends based on a given filter
+	 * Gets a list of your friends based on a given filter.
 	 * 
 	 * @param filter
 	 *            The filter defines conditions that your Friends must meet.
@@ -518,7 +518,7 @@ public class LolChat {
 	}
 
 	/**
-	 * Changes your ChatMode (e.g. busy, away, available)
+	 * Changes your ChatMode (e.g. busy, away, available).
 	 * 
 	 * @param chatMode
 	 *            The new ChatMode
@@ -606,7 +606,6 @@ public class LolChat {
 	 * @param status
 	 *            Your custom Status object
 	 * @see LolStatus
-	 * @see LolStatusExample
 	 */
 	public void setStatus(LolStatus status) {
 		this.status = status.toString();

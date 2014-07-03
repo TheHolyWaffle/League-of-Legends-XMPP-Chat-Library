@@ -31,7 +31,7 @@ import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 public interface FriendListener {
 
 	/**
-	 * Gets called when a friends chat is available (green circle)
+	 * Gets called when a friends chat is available (green circle).
 	 * 
 	 * @param friend
 	 *            The friend who becomes available
@@ -39,7 +39,7 @@ public interface FriendListener {
 	public void onFriendAvailable(Friend friend);
 
 	/**
-	 * Gets called when a friend is away (yellow circle)
+	 * Gets called when a friend is away (yellow circle).
 	 * 
 	 * @param friend
 	 *            The friend who becomes away
@@ -48,7 +48,7 @@ public interface FriendListener {
 
 	/**
 	 * Gets called when a friend is busy (yellow circle). (e.g. waiting in
-	 * queue, champion select, loading screen, ingame)
+	 * queue, champion select, loading screen, ingame).
 	 * 
 	 * @param friend
 	 *            The friend who becomes busy

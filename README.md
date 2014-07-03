@@ -72,7 +72,7 @@ if (api.login("myusername", "mypassword")) {
 
 **More examples**
 
-[look here](src/main/java/com/github/theholywaffle/lolchatapi/example)
+[look here](example)
 
 ## Questions or bugs?
 

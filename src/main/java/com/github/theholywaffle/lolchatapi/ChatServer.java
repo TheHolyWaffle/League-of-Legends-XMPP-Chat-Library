@@ -27,7 +27,7 @@ package com.github.theholywaffle.lolchatapi;
  */
 
 /**
- * Represents a regions chatserver
+ * Represents a regions chatserver.
  *
  */
 public enum ChatServer {
