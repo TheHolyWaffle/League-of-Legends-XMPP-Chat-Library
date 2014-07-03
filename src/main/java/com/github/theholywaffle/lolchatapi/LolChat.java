@@ -302,7 +302,8 @@ public class LolChat {
 	}
 
 	/**
-	 * Gets a friend based on his name. The name is case insensitive.
+	 * Gets a friend based on his name. The name is case insensitive. Beware:
+	 * some names of Friends can be null.
 	 * 
 	 * @param name
 	 *            The name of your friend, for example "Dyrus"
@@ -443,9 +444,9 @@ public class LolChat {
 
 	/**
 	 * Logs in to the chat server without replacing the official connection of
-	 * the League of Legends client. This call is asynchronous.
-	 * BEWARE: add/set all listeners before logging in, otherwise some offline
-	 * messages can get lost.
+	 * the League of Legends client. This call is asynchronous. BEWARE: add/set
+	 * all listeners before logging in, otherwise some offline messages can get
+	 * lost.
 	 * 
 	 * @param username
 	 *            Username of your account

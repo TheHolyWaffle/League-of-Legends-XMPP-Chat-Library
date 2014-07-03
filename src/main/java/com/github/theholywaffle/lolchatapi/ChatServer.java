@@ -33,37 +33,21 @@ package com.github.theholywaffle.lolchatapi;
 public enum ChatServer {
 
 	/**
-	 * North-America
+	 * Brazil
 	 */
-	NA("chat.na1.lol.riotgames.com"),
-	/**
-	 * Europe West
-	 */
-	EUW("chat.euw1.lol.riotgames.com"),
+	BR("chat.br.lol.riotgames.com"),
 	/**
 	 * Europe Nordic and East
 	 */
 	EUNE("chat.eun1.riotgames.com"),
 	/**
-	 * Public Beta Environment
+	 * Europe West
 	 */
-	PBE("chat.pbe1.lol.riotgames.com"),
+	EUW("chat.euw1.lol.riotgames.com"),	
 	/**
-	 * Oceania
+	 * Korea
 	 */
-	OCE("chat.oc1.lol.riotgames.com"),
-	/**
-	 * Brazil
-	 */
-	BR("chat.br.lol.riotgames.com"),
-	/**
-	 * Turkey
-	 */
-	TR("chat.tr.lol.riotgames.com"),
-	/**
-	 * Russia
-	 */
-	RU("chat.ru.lol.riotgames.com"),
+	KR("chat.kr.lol.riotgames.com"),
 	/**
 	 * Latin America North
 	 */
@@ -73,17 +57,37 @@ public enum ChatServer {
 	 */
 	LAS("chat.la2.lol.riotgames.com"),
 	/**
-	 * Taiwan
+	 * North-America
 	 */
-	TW("chattw.lol.garenanow.com"),
+	NA("chat.na1.lol.riotgames.com"),
+	/**
+	 * Oceania
+	 */
+	OCE("chat.oc1.lol.riotgames.com"),
+	/**
+	 * Public Beta Environment
+	 */
+	PBE("chat.pbe1.lol.riotgames.com"),
+	/**
+	 * Phillipines
+	 */
+	PH("chatph.lol.garenanow.com"),
+	/**
+	 * Russia
+	 */
+	RU("chat.ru.lol.riotgames.com"),
 	/**
 	 * Thailand
 	 */
 	TH("chatth.lol.garenanow.com"),
 	/**
-	 * Phillipines
+	 * Turkey
 	 */
-	PH("chatph.lol.garenanow.com"),
+	TR("chat.tr.lol.riotgames.com"),
+	/**
+	 * Taiwan
+	 */
+	TW("chattw.lol.garenanow.com"),
 	/**
 	 * Vietnam
 	 */
