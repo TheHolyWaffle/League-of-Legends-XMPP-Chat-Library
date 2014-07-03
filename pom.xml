@@ -22,8 +22,8 @@
 
 	<licenses>
 		<license>
-			<name>GNU GENERAL PUBLIC LICENSE</name>
-			<url>http://www.gnu.org/copyleft/gpl.html</url>
+			<name>MIT</name>
+			<url>http://opensource.org/licenses/MIT</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
@@ -57,12 +57,12 @@
 						<phase>process-sources</phase>
 						<configuration>
 							<encoding>UTF-8</encoding>
-							<licenseName>gpl_v3</licenseName>
+							<licenseName>mit</licenseName>
 							<inceptionYear>2014</inceptionYear>
 							<organizationName>Bert De Geyter</organizationName>
 							<projectName>League of Legends XMPP Chat Library</projectName>
 							<excludes>
-								<exclude>**/com/github/theholywaffle/lolchatapi/example/*</exclude>
+								<!-- <exclude>**/com/github/theholywaffle/lolchatapi/example/*</exclude> -->
 								<exclude>**/org/jivesoftware/spark/util/*</exclude>
 							</excludes>
 						</configuration>
@@ -96,7 +96,7 @@
 				</executions>
 				<configuration>
 					<quiet>true</quiet>
-					<excludePackageNames>com.github.theholywaffle.lolchatapi.example:org.jivesoftware.spark.util</excludePackageNames>
+					<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!--  com.github.theholywaffle.lolchatapi.example: -->
 					<show>public</show>
 				</configuration>
 			</plugin>

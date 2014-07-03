@@ -1,4 +1,4 @@
-package com.github.theholywaffle.lolchatapi.example;
+
 
 import com.github.theholywaffle.lolchatapi.ChatServer;
 import com.github.theholywaffle.lolchatapi.LolChat;
