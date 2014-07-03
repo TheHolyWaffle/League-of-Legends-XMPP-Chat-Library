@@ -47,7 +47,6 @@ public class LeaguePacketListener implements PacketListener {
 			return;
 		}
 		Presence presence = (Presence) packet;
-		System.out.println("Friend Request Packet Arrived"); // TODO
 		if (presence.getType().equals(Presence.Type.subscribe)) {
 			if (requestListener.onFriendRequest(presence.getFrom())) {
 				Presence newp = new Presence(Presence.Type.subscribed);
@@ -56,7 +55,6 @@ public class LeaguePacketListener implements PacketListener {
 				Presence subscription = new Presence(Presence.Type.subscribe);
 				subscription.setTo(presence.getFrom());
 				connection.sendPacket(subscription);
-				System.out.println("Added friend");// TODO remove
 			} else {
 				Presence newp = new Presence(Presence.Type.unsubscribed);
 				newp.setTo(presence.getFrom());
