@@ -5,7 +5,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 ## Features
 
-- [Documented source](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/latest/)
+- [Documented source](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library)
 - Event-based chat system
 - Automatic reconnecting
 - Managing of Friends and FriendGroups
@@ -79,11 +79,12 @@ if (api.login("myusername", "mypassword")) {
 }
 ```
 
-**More examples**
+**More examples:**
 
 [look here](example)
 
-**Latest JavaDoc**
+**Latest Javadocs:**
+
 [look here](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/latest/)
 
 ## Questions or bugs?
