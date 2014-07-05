@@ -5,36 +5,44 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 ## Features
 
-- Documented source
+- [Documented source](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/latest/)
 - Event-based chat system
 - Automatic reconnecting
 - Managing of Friends and FriendGroups
 - Fetch metadata of friends (level, current division, ...)
+- Riot API supported (https://developer.riotgames.com)
 
 ## Getting Started
 
 * Create a maven project.
 * Add the following to your pom.xml
 ```xml
-<repositories>
-	<repository>
-		<id>League-of-Legends-XMPP-Chat-Library-mvn-repo</id>
-		<url>https://raw.githubusercontent.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/mvn-repo/</url>
-		<snapshots>
-			<enabled>true</enabled>
-			<updatePolicy>always</updatePolicy>
-		</snapshots>
-	</repository>
-</repositories>
-```
-```xml
-<dependencies>
-	<dependency>
-		<groupId>com.github.theholywaffle</groupId>
-		<artifactId>lolchatapi</artifactId>
-		<version>[1.0.0,2.0.0)</version>
-	</dependency>
-</dependencies>
+<project>	
+	...
+	<repositories>
+		...
+		<repository>
+			<id>League-of-Legends-XMPP-Chat-Library-mvn-repo</id>
+			<url>https://raw.githubusercontent.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/mvn-repo/</url>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
+		</repository>
+		...
+	</repositories>
+	
+	<dependencies>
+		...
+		<dependency>
+			<groupId>com.github.theholywaffle</groupId>
+			<artifactId>lolchatapi</artifactId>
+			<version>[1.0.0,2.0.0)</version>
+		</dependency>
+		...
+	</dependencies>
+	...
+</project>
 ```
 * To use this api you have to create a [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/main/java/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
 * Do what you want with this [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object (see examples).
@@ -42,7 +50,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 **Example:**
 
 ```java
-LolChat api = new LolChat(ChatServer.EUW);
+final LolChat api = new LolChat(ChatServer.EUW, FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
 if (api.login("myusername", "mypassword")) {
 
 	// Example 1: Send Chat Message to all your friends
@@ -74,6 +82,9 @@ if (api.login("myusername", "mypassword")) {
 **More examples**
 
 [look here](example)
+
+**Latest JavaDoc**
+[look here](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/latest/)
 
 ## Questions or bugs?
 

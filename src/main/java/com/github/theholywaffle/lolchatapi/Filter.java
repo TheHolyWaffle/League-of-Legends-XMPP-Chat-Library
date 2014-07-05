@@ -26,9 +26,8 @@ package com.github.theholywaffle.lolchatapi;
  * #L%
  */
 
-
 public interface Filter<E> {
-	
+
 	public boolean accept(E object);
 
 }

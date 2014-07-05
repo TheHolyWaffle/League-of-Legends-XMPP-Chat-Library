@@ -45,6 +45,8 @@ import com.github.theholywaffle.lolchatapi.LolChat;
  */
 public class FriendGroup extends Wrapper<RosterGroup> {
 
+	public static final String DEFAULT_FRIENDGROUP = "**Default";
+
 	public FriendGroup(LolChat api, XMPPConnection con, RosterGroup group) {
 		super(api, con, group);
 	}
@@ -73,7 +75,7 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	 * @return True if this group contains the friend, false otherwise.
 	 */
 	public boolean contains(Friend friend) {
-		for (Friend f : getFriends()) {
+		for (final Friend f : getFriends()) {
 			if (StringUtils.parseName(f.getUserId()).equals(
 					StringUtils.parseName(friend.getUserId()))) {
 				return true;
@@ -88,8 +90,8 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	 * @return list of all Friends in this group
 	 */
 	public List<Friend> getFriends() {
-		List<Friend> friends = new ArrayList<>();
-		for (RosterEntry e : get().getEntries()) {
+		final List<Friend> friends = new ArrayList<>();
+		for (final RosterEntry e : get().getEntries()) {
 			friends.add(new Friend(api, con, e));
 		}
 		return friends;
@@ -113,7 +115,7 @@ public class FriendGroup extends Wrapper<RosterGroup> {
 	public void setName(String name) {
 		try {
 			get().setName(name);
-		} catch (NotConnectedException e) {
+		} catch (final NotConnectedException e) {
 			e.printStackTrace();
 		}
 	}

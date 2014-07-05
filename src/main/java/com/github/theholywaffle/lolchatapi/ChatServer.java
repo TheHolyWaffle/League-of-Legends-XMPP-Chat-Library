@@ -100,9 +100,9 @@ public enum ChatServer {
 		this.host = host;
 		this.api = api;
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return name().toLowerCase();
 	}
 

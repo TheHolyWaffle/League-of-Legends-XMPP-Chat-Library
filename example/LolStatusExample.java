@@ -1,6 +1,5 @@
-
-
 import com.github.theholywaffle.lolchatapi.ChatServer;
+import com.github.theholywaffle.lolchatapi.FriendRequestPolicy;
 import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.LolStatus;
 import com.github.theholywaffle.lolchatapi.LolStatus.Queue;
@@ -18,12 +17,13 @@ public class LolStatusExample {
 	}
 
 	public LolStatusExample() {
-		LolChat api = new LolChat(ChatServer.EUW);
+		final LolChat api = new LolChat(ChatServer.EUW,
+				FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Print out all groups and all friends in those groups
-			Friend dyrus = api.getFriendByName("Dyrus");
-			LolStatus status = dyrus.getStatus();
+			final Friend dyrus = api.getFriendByName("Dyrus");
+			final LolStatus status = dyrus.getStatus();
 			System.out.println("Current divison: "
 					+ status.getRankedLeagueDivision());
 			// Status be "in queue", "championselect", "ingame", "spectating",..
@@ -33,7 +33,7 @@ public class LolStatusExample {
 			// ...
 
 			// Example 2: Set a custom status
-			LolStatus newStatus = new LolStatus();
+			final LolStatus newStatus = new LolStatus();
 			newStatus.setLevel(1337);
 			newStatus.setRankedLeagueQueue(Queue.RANKED_SOLO_5x5);
 			newStatus.setRankedLeagueTier(Tier.CHALLENGER);
@@ -41,7 +41,8 @@ public class LolStatusExample {
 			api.setStatus(newStatus);
 
 			// Example 3: Copy status from friend
-			LolStatus copyStatus = api.getFriendByName("Dyrus").getStatus();
+			final LolStatus copyStatus = api.getFriendByName("Dyrus")
+					.getStatus();
 			copyStatus.setLevel(1337); // Modify it if you like
 			api.setStatus(copyStatus); // Put it as your own status
 

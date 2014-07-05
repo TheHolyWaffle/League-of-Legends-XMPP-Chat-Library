@@ -49,17 +49,6 @@ public class RiotApi {
 
 	private static Map<String, RiotApi> instances = new HashMap<>();
 
-	private String apiKey;
-	private ChatServer server;
-	private List<RateLimiter> rateLimiters = new ArrayList<>();
-
-	private RiotApi(String apiKey, ChatServer server) {
-		this.apiKey = apiKey;
-		this.server = server;
-		rateLimiters.add(new RateLimiter(10, 10_000));
-		rateLimiters.add(new RateLimiter(500, 600_000));
-	}
-
 	public static RiotApi build(String apiKey, ChatServer server) {
 		RiotApi api = instances.get(apiKey);
 		if (api == null) {
@@ -68,17 +57,52 @@ public class RiotApi {
 		}
 		return api;
 	}
+	private final String apiKey;
+	private final ChatServer server;
+
+	private final List<RateLimiter> rateLimiters = new ArrayList<>();
+
+	private RiotApi(String apiKey, ChatServer server) {
+		this.apiKey = apiKey;
+		this.server = server;
+		rateLimiters.add(new RateLimiter(10, 10_000));
+		rateLimiters.add(new RateLimiter(500, 600_000));
+	}
+
+	public String getName(String userId) throws IOException {
+		final String summonerId = StringUtils.parseName(userId).replace("sum",
+				"");
+		final String response = request("https://" + server.api + "/api/lol/"
+				+ server + "/v1.4/summoner/" + summonerId + "/name?api_key="
+				+ apiKey);
+		final Map<String, String> summoner = new GsonBuilder().create()
+				.fromJson(response, new TypeToken<Map<String, String>>() {
+				}.getType());
+		return summoner.get(summonerId);
+	}
+
+	public long getSummonerId(String name) throws IOException,
+			URISyntaxException {
+		final URI uri = new URI("https", server.api, "/api/lol/" + server
+				+ "/v1.4/summoner/by-name/" + name, "api_key=" + apiKey, null);
+		final String response = request(uri.toASCIIString());
+		final Map<String, SummonerDto> summoner = new GsonBuilder().create()
+				.fromJson(response, new TypeToken<Map<String, SummonerDto>>() {
+				}.getType());
+		return summoner.entrySet().iterator().next().getValue().getId();
+	}
 
 	private String request(String URL) throws IOException {
-		for (RateLimiter limiter : rateLimiters) {
+		for (final RateLimiter limiter : rateLimiters) {
 			limiter.acquire();
 		}
-		for (RateLimiter limiter : rateLimiters) {
+		for (final RateLimiter limiter : rateLimiters) {
 			limiter.enter();
 		}
-		String requestURL = URL;
-		URL url = new URL(requestURL);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		final String requestURL = URL;
+		final URL url = new URL(requestURL);
+		final HttpURLConnection connection = (HttpURLConnection) url
+				.openConnection();
 		connection.setRequestMethod("GET");
 		connection.setInstanceFollowRedirects(false);
 
@@ -87,38 +111,16 @@ public class RiotApi {
 					+ connection.getResponseCode() + " instead of 200.");
 		}
 
-		InputStream is = connection.getInputStream();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is,
+		final InputStream is = connection.getInputStream();
+		final BufferedReader rd = new BufferedReader(new InputStreamReader(is,
 				"utf-8"));
 		String line;
-		StringBuffer response = new StringBuffer();
+		final StringBuffer response = new StringBuffer();
 		while ((line = rd.readLine()) != null) {
 			response.append(line);
 		}
 		connection.disconnect();
 		return response.toString();
-	}
-
-	public String getName(String userId) throws IOException {
-		String summonerId = StringUtils.parseName(userId).replace("sum", "");
-		String response = request("https://" + server.api + "/api/lol/"
-				+ server + "/v1.4/summoner/" + summonerId + "/name?api_key="
-				+ apiKey);
-		Map<String, String> summoner = new GsonBuilder().create().fromJson(
-				response, new TypeToken<Map<String, String>>() {
-				}.getType());
-		return summoner.get(summonerId);
-	}
-
-	public long getSummonerId(String name) throws IOException,
-			URISyntaxException {
-		URI uri = new URI("https", server.api, "/api/lol/" + server
-				+ "/v1.4/summoner/by-name/" + name, "api_key=" + apiKey, null);
-		String response = request(uri.toASCIIString());
-		Map<String, SummonerDto> summoner = new GsonBuilder().create()
-				.fromJson(response, new TypeToken<Map<String, SummonerDto>>() {
-				}.getType());
-		return summoner.entrySet().iterator().next().getValue().getId();
 	}
 
 }

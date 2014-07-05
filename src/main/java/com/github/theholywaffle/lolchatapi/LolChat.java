@@ -65,8 +65,6 @@ import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
 
 public class LolChat {
 
-	public static final String DEFAULT_FRIENDGROUP = "**Default";
-
 	private final XMPPConnection connection;
 	private final ArrayList<ChatListener> chatListeners = new ArrayList<>();
 	private final ArrayList<FriendListener> friendListeners = new ArrayList<>();
@@ -132,12 +130,13 @@ public class LolChat {
 			this.riotApi = RiotApi.build(apiKey, server);
 		}
 		Roster.setDefaultSubscriptionMode(SubscriptionMode.manual);
-		ConnectionConfiguration config = new ConnectionConfiguration(
+		final ConnectionConfiguration config = new ConnectionConfiguration(
 				server.host, 5223, "pvp.net");
 		config.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
 		config.setSocketFactory(new DummySSLSocketFactory());
 		config.setCompressionEnabled(true);
 		connection = new XMPPTCPConnection(config);
+
 		try {
 			connection.connect();
 		} catch (XMPPException | SmackException | IOException e) {
@@ -152,7 +151,7 @@ public class LolChat {
 				while (!stop) {
 					try {
 						Thread.sleep(500);
-					} catch (InterruptedException ignored) {
+					} catch (final InterruptedException ignored) {
 					}
 				}
 			}
@@ -167,65 +166,6 @@ public class LolChat {
 	 */
 	public void addChatListener(ChatListener chatListener) {
 		chatListeners.add(chatListener);
-	}
-
-	/**
-	 * Adds a FriendListener that listens to changes from all your friends. Such
-	 * as logging in, starting games, ...
-	 * 
-	 * @param friendListener
-	 *            The FriendListener that you want to add
-	 */
-	public void addFriendListener(FriendListener friendListener) {
-		friendListeners.add(friendListener);
-	}
-
-	private void addListeners() {
-		connection.getRoster().addRosterListener(
-				leagueRosterListener = new LeagueRosterListener(this,
-						connection));
-		connection.addPacketListener(
-				leaguePacketListener = new LeaguePacketListener(this,
-						connection), new PacketFilter() {
-					public boolean accept(Packet packet) {
-						if (packet instanceof Presence) {
-							Presence presence = (Presence) packet;
-							if (presence.getType().equals(
-									Presence.Type.subscribed)
-									|| presence.getType().equals(
-											Presence.Type.subscribe)
-									|| presence.getType().equals(
-											Presence.Type.unsubscribed)
-									|| presence.getType().equals(
-											Presence.Type.unsubscribe)) {
-								return true;
-							}
-						}
-						return false;
-					}
-				});
-		ChatManager.getInstanceFor(connection).addChatListener(
-				new ChatManagerListener() {
-
-					@Override
-					public void chatCreated(Chat c, boolean locally) {
-						final Friend friend = getFriendById(c.getParticipant());
-						if (friend != null) {
-							c.addMessageListener(new MessageListener() {
-
-								@Override
-								public void processMessage(Chat chat,
-										Message msg) {
-									for (ChatListener c : chatListeners) {
-										if (msg.getType() == Message.Type.chat) {
-											c.onMessage(friend, msg.getBody());
-										}
-									}
-								}
-							});
-						}
-					}
-				});
 	}
 
 	/**
@@ -266,6 +206,40 @@ public class LolChat {
 	}
 
 	/**
+	 * Sends an friend request to an other user.
+	 * 
+	 * @param userId
+	 *            The userId of the user you want to add (e.g.
+	 *            sum12345678@pvp.net).
+	 * @param name
+	 *            The name you want to assign to this user.
+	 * @param friendGroup
+	 *            The FriendGroup you want to put this user in.
+	 */
+	public void addFriendById(String userId, String name,
+			FriendGroup friendGroup) {
+		if (name == null && getRiotApi() != null) {
+			try {
+				name = getRiotApi().getName(userId);
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			connection
+					.getRoster()
+					.createEntry(
+							StringUtils.parseBareAddress(userId),
+							name,
+							new String[] { friendGroup == null ? getDefaultFriendGroup()
+									.getName() : friendGroup.getName() });
+		} catch (NotLoggedInException | NoResponseException
+				| XMPPErrorException | NotConnectedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Sends an friend request to an other user. An Riot API key is required for
 	 * this.
 	 * 
@@ -290,7 +264,7 @@ public class LolChat {
 	public boolean addFriendByName(String name, FriendGroup friendGroup) {
 		if (getRiotApi() != null) {
 			try {
-				StringBuilder buf = new StringBuilder();
+				final StringBuilder buf = new StringBuilder();
 				buf.append("sum");
 				buf.append(getRiotApi().getSummonerId(name));
 				buf.append("@pvp.net");
@@ -305,40 +279,6 @@ public class LolChat {
 	}
 
 	/**
-	 * Sends an friend request to an other user.
-	 * 
-	 * @param userId
-	 *            The userId of the user you want to add (e.g.
-	 *            sum12345678@pvp.net).
-	 * @param name
-	 *            The name you want to assign to this user.
-	 * @param friendGroup
-	 *            The FriendGroup you want to put this user in.
-	 */
-	public void addFriendById(String userId, String name,
-			FriendGroup friendGroup) {
-		if (name == null && getRiotApi() != null) {
-			try {
-				name = getRiotApi().getName(userId);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			connection
-					.getRoster()
-					.createEntry(
-							StringUtils.parseBareAddress(userId),
-							name,
-							new String[] { friendGroup == null ? getDefaultFriendGroup()
-									.getName() : friendGroup.getName() });
-		} catch (NotLoggedInException | NoResponseException
-				| XMPPErrorException | NotConnectedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
 	 * Creates a new FriendGroup. If this FriendGroup contains no Friends when
 	 * you logout it will be erased from the server.
 	 * 
@@ -348,11 +288,70 @@ public class LolChat {
 	 *         already exists.
 	 */
 	public FriendGroup addFriendGroup(String name) {
-		RosterGroup g = connection.getRoster().createGroup(name);
+		final RosterGroup g = connection.getRoster().createGroup(name);
 		if (g != null) {
 			return new FriendGroup(this, connection, g);
 		}
 		return null;
+	}
+
+	/**
+	 * Adds a FriendListener that listens to changes from all your friends. Such
+	 * as logging in, starting games, ...
+	 * 
+	 * @param friendListener
+	 *            The FriendListener that you want to add
+	 */
+	public void addFriendListener(FriendListener friendListener) {
+		friendListeners.add(friendListener);
+	}
+
+	private void addListeners() {
+		connection.getRoster().addRosterListener(
+				leagueRosterListener = new LeagueRosterListener(this,
+						connection));
+		connection.addPacketListener(
+				leaguePacketListener = new LeaguePacketListener(this,
+						connection), new PacketFilter() {
+					public boolean accept(Packet packet) {
+						if (packet instanceof Presence) {
+							final Presence presence = (Presence) packet;
+							if (presence.getType().equals(
+									Presence.Type.subscribed)
+									|| presence.getType().equals(
+											Presence.Type.subscribe)
+									|| presence.getType().equals(
+											Presence.Type.unsubscribed)
+									|| presence.getType().equals(
+											Presence.Type.unsubscribe)) {
+								return true;
+							}
+						}
+						return false;
+					}
+				});
+		ChatManager.getInstanceFor(connection).addChatListener(
+				new ChatManagerListener() {
+
+					@Override
+					public void chatCreated(Chat c, boolean locally) {
+						final Friend friend = getFriendById(c.getParticipant());
+						if (friend != null) {
+							c.addMessageListener(new MessageListener() {
+
+								@Override
+								public void processMessage(Chat chat,
+										Message msg) {
+									for (final ChatListener c : chatListeners) {
+										if (msg.getType() == Message.Type.chat) {
+											c.onMessage(friend, msg.getBody());
+										}
+									}
+								}
+							});
+						}
+					}
+				});
 	}
 
 	/**
@@ -362,7 +361,7 @@ public class LolChat {
 		connection.getRoster().removeRosterListener(leagueRosterListener);
 		try {
 			connection.disconnect();
-		} catch (NotConnectedException e) {
+		} catch (final NotConnectedException e) {
 			e.printStackTrace();
 		}
 		stop = true;
@@ -383,7 +382,7 @@ public class LolChat {
 	 * @return Default FriendGroup
 	 */
 	public FriendGroup getDefaultFriendGroup() {
-		return getFriendGroupByName(DEFAULT_FRIENDGROUP);
+		return getFriendGroupByName(FriendGroup.DEFAULT_FRIENDGROUP);
 	}
 
 	/**
@@ -394,8 +393,8 @@ public class LolChat {
 	 * @return The first Friend that meets the conditions or null if not found.
 	 */
 	public Friend getFriend(Filter<Friend> filter) {
-		for (RosterEntry e : connection.getRoster().getEntries()) {
-			Friend f = new Friend(this, connection, e);
+		for (final RosterEntry e : connection.getRoster().getEntries()) {
+			final Friend f = new Friend(this, connection, e);
 			if (filter.accept(f)) {
 				return f;
 			}
@@ -412,7 +411,7 @@ public class LolChat {
 	 *         not a friend of you.
 	 */
 	public Friend getFriendById(String xmppAddress) {
-		RosterEntry entry = connection.getRoster().getEntry(
+		final RosterEntry entry = connection.getRoster().getEntry(
 				StringUtils.parseBareAddress(xmppAddress));
 		if (entry != null) {
 			return new Friend(this, connection, entry);
@@ -433,13 +432,6 @@ public class LolChat {
 		return getFriend(new Filter<Friend>() {
 
 			public boolean accept(Friend friend) {
-				if (friend.getName() == null && getRiotApi() != null) {
-					try {
-						friend.setName(getRiotApi().getName(friend.getUserId()));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
 				return friend.getName() != null
 						&& friend.getName().equalsIgnoreCase(name);
 			}
@@ -455,7 +447,7 @@ public class LolChat {
 	 * @return The corresponding FriendGroup
 	 */
 	public FriendGroup getFriendGroupByName(String name) {
-		RosterGroup g = connection.getRoster().getGroup(name);
+		final RosterGroup g = connection.getRoster().getGroup(name);
 		if (g != null) {
 			return new FriendGroup(this, connection, g);
 		}
@@ -468,8 +460,8 @@ public class LolChat {
 	 * @return A List of all your FriendGroups
 	 */
 	public List<FriendGroup> getFriendGroups() {
-		ArrayList<FriendGroup> groups = new ArrayList<>();
-		for (RosterGroup g : connection.getRoster().getGroups()) {
+		final ArrayList<FriendGroup> groups = new ArrayList<>();
+		for (final RosterGroup g : connection.getRoster().getGroups()) {
 			groups.add(new FriendGroup(this, connection, g));
 		}
 		return groups;
@@ -515,9 +507,9 @@ public class LolChat {
 	 * @return A List of your Friends that meet the condition of your Filter
 	 */
 	public List<Friend> getFriends(Filter<Friend> filter) {
-		ArrayList<Friend> friends = new ArrayList<>();
-		for (RosterEntry e : connection.getRoster().getEntries()) {
-			Friend f = new Friend(this, connection, e);
+		final ArrayList<Friend> friends = new ArrayList<>();
+		for (final RosterEntry e : connection.getRoster().getEntries()) {
+			final Friend f = new Friend(this, connection, e);
 			if (filter.accept(f)) {
 				friends.add(f);
 			}
@@ -581,6 +573,25 @@ public class LolChat {
 	}
 
 	/**
+	 * Returns true if server has sent us all information after logging in.
+	 * 
+	 * @return True if server has sent us all information after logging in,
+	 *         otherwise false.
+	 */
+	public boolean isLoaded() {
+		return loaded;
+	}
+
+	/**
+	 * Returns true if your appearance is set to online, otherwise false.
+	 * 
+	 * @return True if your appearance is set to online, otherwise false.
+	 */
+	public boolean isOnline() {
+		return type == Presence.Type.available;
+	}
+
+	/**
 	 * Logs in to the chat server without replacing the official connection of
 	 * the League of Legends client. This call is asynchronous. BEWARE: add/set
 	 * all listeners before logging in, otherwise some offline messages can get
@@ -623,12 +634,12 @@ public class LolChat {
 		} catch (XMPPException | SmackException | IOException e) {
 		}
 		if (connection.isAuthenticated()) {
-			long startTime = System.currentTimeMillis();
+			final long startTime = System.currentTimeMillis();
 			while (!leagueRosterListener.isLoaded()
 					&& (System.currentTimeMillis() - startTime) < 1000) {
 				try {
 					Thread.sleep(50);
-				} catch (InterruptedException e) {
+				} catch (final InterruptedException e) {
 				}
 			}
 			loaded = true;
@@ -693,25 +704,6 @@ public class LolChat {
 	}
 
 	/**
-	 * Returns true if your appearance is set to online, otherwise false.
-	 * 
-	 * @return True if your appearance is set to online, otherwise false.
-	 */
-	public boolean isOnline() {
-		return type == Presence.Type.available;
-	}
-
-	/**
-	 * Returns true if server has sent us all information after logging in.
-	 * 
-	 * @return True if server has sent us all information after logging in,
-	 *         otherwise false.
-	 */
-	public boolean isLoaded() {
-		return loaded;
-	}
-
-	/**
 	 * Change your appearance to offline.
 	 * 
 	 */
@@ -746,10 +738,10 @@ public class LolChat {
 	}
 
 	private void updateStatus() {
-		Presence newPresence = new Presence(type, status, 1, mode);
+		final Presence newPresence = new Presence(type, status, 1, mode);
 		try {
 			connection.sendPacket(newPresence);
-		} catch (NotConnectedException e) {
+		} catch (final NotConnectedException e) {
 			e.printStackTrace();
 		}
 	}

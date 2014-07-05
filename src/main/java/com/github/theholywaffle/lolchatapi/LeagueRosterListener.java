@@ -42,14 +42,14 @@ import com.github.theholywaffle.lolchatapi.wrapper.Friend.FriendStatus;
 
 public class LeagueRosterListener implements RosterListener {
 
-	private HashMap<String, Presence.Type> typeUsers = new HashMap<>();
-	private HashMap<String, Presence.Mode> modeUsers = new HashMap<>();
-	private HashMap<String, LolStatus> statusUsers = new HashMap<>();
-	private HashMap<String, FriendStatus> friendStatusUsers = new HashMap<>();
-	private LolChat api;
+	private final HashMap<String, Presence.Type> typeUsers = new HashMap<>();
+	private final HashMap<String, Presence.Mode> modeUsers = new HashMap<>();
+	private final HashMap<String, LolStatus> statusUsers = new HashMap<>();
+	private final HashMap<String, FriendStatus> friendStatusUsers = new HashMap<>();
+	private final LolChat api;
 
 	private boolean added;
-	private XMPPConnection connection;
+	private final XMPPConnection connection;
 
 	public LeagueRosterListener(LolChat api, XMPPConnection connection) {
 		this.api = api;
@@ -57,8 +57,8 @@ public class LeagueRosterListener implements RosterListener {
 	}
 
 	public void entriesAdded(Collection<String> e) {
-		for (String s : e) {
-			Friend f = api.getFriendById(s);
+		for (final String s : e) {
+			final Friend f = api.getFriendById(s);
 			if (!added && !api.isLoaded()) {
 				if (f.isOnline()) {
 					typeUsers.put(s, Presence.Type.available);
@@ -68,11 +68,11 @@ public class LeagueRosterListener implements RosterListener {
 					typeUsers.put(s, Presence.Type.unavailable);
 				}
 			}
-			if(f.getGroup() == null){
+			if (f.getGroup() == null) {
 				api.getDefaultFriendGroup().addFriend(f);
 			}
-			
-			if(f.getFriendStatus() != FriendStatus.MUTUAL_FRIENDS){
+
+			if (f.getFriendStatus() != FriendStatus.MUTUAL_FRIENDS) {
 				friendStatusUsers.put(s, f.getFriendStatus());
 			}
 		}
@@ -80,19 +80,21 @@ public class LeagueRosterListener implements RosterListener {
 	}
 
 	public void entriesDeleted(Collection<String> e) {
-		for (String s : e) {
+		for (final String s : e) {
 			friendStatusUsers.put(s, null);
-			for(FriendListener l : api.getFriendListeners()){
+			for (final FriendListener l : api.getFriendListeners()) {
 				l.onRemoveFriend(s);
 			}
 		}
 	}
 
 	public void entriesUpdated(Collection<String> e) {
-		for (String s : e) {
-			Friend f = api.getFriendById(s);
-			FriendStatus previous = friendStatusUsers.get(s);
-			if (((previous != null && previous != FriendStatus.MUTUAL_FRIENDS) || previous == null || !api.isLoaded())	&& f.getFriendStatus() == FriendStatus.MUTUAL_FRIENDS) {
+		for (final String s : e) {
+			final Friend f = api.getFriendById(s);
+			final FriendStatus previous = friendStatusUsers.get(s);
+			if (((previous != null && previous != FriendStatus.MUTUAL_FRIENDS)
+					|| previous == null || !api.isLoaded())
+					&& f.getFriendStatus() == FriendStatus.MUTUAL_FRIENDS) {
 				onNewFriend(f);
 			}
 			friendStatusUsers.put(s, f.getFriendStatus());
@@ -103,15 +105,21 @@ public class LeagueRosterListener implements RosterListener {
 		return added;
 	}
 
+	private void onNewFriend(Friend f) {
+		for (final FriendListener l : api.getFriendListeners()) {
+			l.onNewFriend(f);
+		}
+	}
+
 	public void presenceChanged(Presence p) {
 		String from = p.getFrom();
 		if (from != null) {
 			p = connection.getRoster().getPresence(p.getFrom());
 			from = StringUtils.parseBareAddress(from);
-			Friend friend = api.getFriendById(from);
+			final Friend friend = api.getFriendById(from);
 			if (friend != null) {
-				for (FriendListener l : api.getFriendListeners()) {
-					Presence.Type previousType = typeUsers.get(from);
+				for (final FriendListener l : api.getFriendListeners()) {
+					final Presence.Type previousType = typeUsers.get(from);
 					if (p.getType() == Presence.Type.available
 							&& (previousType == null || previousType != Presence.Type.available)) {
 						l.onFriendJoin(friend);
@@ -120,7 +128,7 @@ public class LeagueRosterListener implements RosterListener {
 						l.onFriendLeave(friend);
 					}
 
-					Presence.Mode previousMode = modeUsers.get(from);
+					final Presence.Mode previousMode = modeUsers.get(from);
 					if (p.getMode() == Presence.Mode.chat
 							&& (previousMode == null || previousMode != Presence.Mode.chat)) {
 						l.onFriendAvailable(friend);
@@ -134,8 +142,10 @@ public class LeagueRosterListener implements RosterListener {
 
 					if (p.getStatus() != null) {
 						try {
-							LolStatus previousStatus = statusUsers.get(from);
-							LolStatus newStatus = new LolStatus(p.getStatus());
+							final LolStatus previousStatus = statusUsers
+									.get(from);
+							final LolStatus newStatus = new LolStatus(
+									p.getStatus());
 							if (previousStatus != null
 									&& !newStatus.equals(previousStatus)) {
 								l.onFriendStatusChange(friend);
@@ -155,12 +165,6 @@ public class LeagueRosterListener implements RosterListener {
 					}
 				}
 			}
-		}
-	}
-	
-	private void onNewFriend(Friend f){
-		for(FriendListener l : api.getFriendListeners()){
-			l.onNewFriend(f);
 		}
 	}
 

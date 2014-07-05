@@ -26,7 +26,6 @@ package com.github.theholywaffle.lolchatapi;
  * #L%
  */
 
-
 import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
 
 public enum FriendRequestPolicy {
@@ -40,7 +39,8 @@ public enum FriendRequestPolicy {
 	 */
 	REJECT_ALL,
 	/**
-	 * Accepts new Friend requests based on your FriendRequestListener. See {@link LolChat#setFriendRequestListener(FriendRequestListener)}.
+	 * Accepts new Friend requests based on your FriendRequestListener. See
+	 * {@link LolChat#setFriendRequestListener(FriendRequestListener)}.
 	 * 
 	 * @see FriendRequestListener
 	 */

@@ -1,6 +1,5 @@
-
-
 import com.github.theholywaffle.lolchatapi.ChatServer;
+import com.github.theholywaffle.lolchatapi.FriendRequestPolicy;
 import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
@@ -12,14 +11,15 @@ public class FriendGroupExample {
 	}
 
 	public FriendGroupExample() {
-		LolChat api = new LolChat(ChatServer.EUW);
+		final LolChat api = new LolChat(ChatServer.EUW,
+				FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Print out all groups and all friends in those groups
-			for (FriendGroup g : api.getFriendGroups()) {
+			for (final FriendGroup g : api.getFriendGroups()) {
 				System.out.println("Group: " + g.getName()); // Print out name
 																// of group
-				for (Friend f : g.getFriends()) {
+				for (final Friend f : g.getFriends()) {
 					System.out.println("Friend: " + f.getName());
 				}
 			}

@@ -130,8 +130,9 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * @return ChatMode of this friend
 	 */
 	public ChatMode getChatMode() {
-		Presence.Mode mode = con.getRoster().getPresence(getUserId()).getMode();
-		for (ChatMode c : ChatMode.values()) {
+		final Presence.Mode mode = con.getRoster().getPresence(getUserId())
+				.getMode();
+		for (final ChatMode c : ChatMode.values()) {
 			if (c.mode == mode) {
 				return c;
 			}
@@ -146,7 +147,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * @see FriendStatus
 	 */
 	public FriendStatus getFriendStatus() {
-		for (FriendStatus status : FriendStatus.values()) {
+		for (final FriendStatus status : FriendStatus.values()) {
 			if (status.status == get().getStatus()) {
 				return status;
 			}
@@ -161,7 +162,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	 *         this Friend is not in a FriendGroup.
 	 */
 	public FriendGroup getGroup() {
-		Collection<RosterGroup> groups = get().getGroups();
+		final Collection<RosterGroup> groups = get().getGroups();
 		if (groups.size() > 0) {
 			return new FriendGroup(api, con, get().getGroups().iterator()
 					.next());
@@ -170,17 +171,18 @@ public class Friend extends Wrapper<RosterEntry> {
 	}
 
 	/**
-	 * Gets the name of this friend.
+	 * Gets the name of this friend. If the name was null then we try to fetch
+	 * to fetch the name with your Riot API Key if provided.
 	 * 
-	 * @return name of this Friend or an empty String if no name is assigned.
+	 * @return The name of this Friend or null if no name is assigned.
 	 */
-	public String getName() {		
+	public String getName() {
 		String name = get().getName();
 		if (name == null && api.getRiotApi() != null) {
 			try {
 				name = api.getRiotApi().getName(getUserId());
 				setName(name);
-			} catch (IOException e) {
+			} catch (final IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -195,7 +197,8 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * @return Status
 	 */
 	public LolStatus getStatus() {
-		String status = con.getRoster().getPresence(getUserId()).getStatus();
+		final String status = con.getRoster().getPresence(getUserId())
+				.getStatus();
 		if (status != null && !status.isEmpty()) {
 			try {
 				return new LolStatus(status);
@@ -283,7 +286,7 @@ public class Friend extends Wrapper<RosterEntry> {
 	public void setName(String name) {
 		try {
 			get().setName(name);
-		} catch (NotConnectedException e) {
+		} catch (final NotConnectedException e) {
 			e.printStackTrace();
 		}
 	}

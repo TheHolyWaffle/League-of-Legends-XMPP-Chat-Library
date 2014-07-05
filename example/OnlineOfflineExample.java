@@ -1,7 +1,6 @@
-
-
 import com.github.theholywaffle.lolchatapi.ChatMode;
 import com.github.theholywaffle.lolchatapi.ChatServer;
+import com.github.theholywaffle.lolchatapi.FriendRequestPolicy;
 import com.github.theholywaffle.lolchatapi.LolChat;
 
 public class OnlineOfflineExample {
@@ -11,7 +10,8 @@ public class OnlineOfflineExample {
 	}
 
 	public OnlineOfflineExample() {
-		LolChat api = new LolChat(ChatServer.EUW);
+		final LolChat api = new LolChat(ChatServer.EUW,
+				FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: appear offline

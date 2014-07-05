@@ -26,15 +26,14 @@ package com.github.theholywaffle.lolchatapi.riotapi;
  * #L%
  */
 
-
 import java.util.LinkedList;
 
 public class RateLimiter {
 
-	private LinkedList<Long> list = new LinkedList<Long>();
+	private final LinkedList<Long> list = new LinkedList<Long>();
 
-	private int amount;
-	private int timespan;
+	private final int amount;
+	private final int timespan;
 
 	public RateLimiter(int amount, int timespan) {
 		this.amount = amount;
@@ -46,20 +45,20 @@ public class RateLimiter {
 		while (list.size() >= amount) {
 			try {
 				Thread.sleep(20);
-			} catch (InterruptedException e) {
+			} catch (final InterruptedException e) {
 			}
 			remove();
-		}		
+		}
 	}
-	
-	public void enter(){
+
+	public void enter() {
 		list.addFirst(System.currentTimeMillis() + timespan);
 	}
 
 	private void remove() {
 		boolean searching = true;
 		while (searching && list.size() > 0) {
-			long element = list.getLast();
+			final long element = list.getLast();
 			if (element < System.currentTimeMillis()) {
 				list.removeLast();
 			} else {

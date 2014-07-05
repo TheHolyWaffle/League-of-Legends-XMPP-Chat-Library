@@ -32,46 +32,53 @@ public class DummySSLSocketFactory extends SSLSocketFactory {
 	public DummySSLSocketFactory() {
 
 		try {
-			SSLContext sslcontent = SSLContext.getInstance("TLS");
+			final SSLContext sslcontent = SSLContext.getInstance("TLS");
 			sslcontent.init(
 					null, // KeyManager not required
 					new TrustManager[] { new DummyTrustManager() },
 					new java.security.SecureRandom());
 			factory = sslcontent.getSocketFactory();
-		} catch (NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException e) {
 			e.printStackTrace();
-		} catch (KeyManagementException e) {
+		} catch (final KeyManagementException e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Override
 	public Socket createSocket(InetAddress inaddr, int i) throws IOException {
 		return factory.createSocket(inaddr, i);
 	}
 
+	@Override
 	public Socket createSocket(InetAddress inaddr, int i, InetAddress inaddr2,
 			int j) throws IOException {
 		return factory.createSocket(inaddr, i, inaddr2, j);
 	}
 
+	@Override
 	public Socket createSocket(Socket socket, String s, int i, boolean flag)
 			throws IOException {
 		return factory.createSocket(socket, s, i, flag);
 	}
 
+	@Override
 	public Socket createSocket(String s, int i) throws IOException {
 		return factory.createSocket(s, i);
 	}
 
+	@Override
 	public Socket createSocket(String s, int i, InetAddress inaddr, int j)
 			throws IOException {
 		return factory.createSocket(s, i, inaddr, j);
 	}
 
+	@Override
 	public String[] getDefaultCipherSuites() {
 		return factory.getSupportedCipherSuites();
 	}
 
+	@Override
 	public String[] getSupportedCipherSuites() {
 		return factory.getSupportedCipherSuites();
 	}
@@ -105,9 +112,9 @@ class DummyTrustManager implements X509TrustManager {
 		try {
 			cert[0].checkValidity();
 			return true;
-		} catch (CertificateExpiredException e) {
+		} catch (final CertificateExpiredException e) {
 			return false;
-		} catch (CertificateNotYetValidException e) {
+		} catch (final CertificateNotYetValidException e) {
 			return false;
 		}
 	}

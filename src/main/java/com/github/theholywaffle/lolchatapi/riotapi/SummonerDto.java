@@ -26,7 +26,6 @@ package com.github.theholywaffle.lolchatapi.riotapi;
  * #L%
  */
 
-
 public class SummonerDto {
 
 	private long id;

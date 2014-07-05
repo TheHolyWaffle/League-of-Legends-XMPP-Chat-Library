@@ -1,6 +1,5 @@
-
-
 import com.github.theholywaffle.lolchatapi.ChatServer;
+import com.github.theholywaffle.lolchatapi.FriendRequestPolicy;
 import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
@@ -12,17 +11,18 @@ public class ChatExample {
 	}
 
 	public ChatExample() {
-		LolChat api = new LolChat(ChatServer.EUW);
+		final LolChat api = new LolChat(ChatServer.EUW,
+				FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Send Chat Message to all your friends
-			for (Friend f : api.getFriends()) {
+			for (final Friend f : api.getFriends()) {
 				f.sendMessage("Hello " + f.getName());
 			}
 
 			// Example 2: Send Chat Message to all your friends and wait for an
 			// response
-			for (Friend f : api.getFriends()) {
+			for (final Friend f : api.getFriends()) {
 				f.sendMessage("Hello " + f.getName(), new ChatListener() {
 
 					@Override
@@ -34,7 +34,7 @@ public class ChatExample {
 			}
 
 			// Example3: Send Chat Message to an specific friend
-			Friend f = api.getFriendByName("Dyrus");
+			final Friend f = api.getFriendByName("Dyrus");
 			if (f != null && f.isOnline()) {
 				f.sendMessage("Hi, I'm your biggest fan!");
 			}

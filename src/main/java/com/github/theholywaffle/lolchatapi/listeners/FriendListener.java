@@ -81,19 +81,23 @@ public interface FriendListener {
 	 *            The friend who changes status
 	 */
 	public void onFriendStatusChange(Friend friend);
-	
-	
+
 	/**
-	 * Gets called when a new friend is added and you both accepted each other request.
+	 * Gets called when a new friend is added and you both accepted each other
+	 * request.
 	 * 
-	 * @param friend The new Friend.
+	 * @param friend
+	 *            The new Friend.
 	 */
 	public void onNewFriend(Friend friend);
-	
+
 	/**
-	 * Gets called when a friend is deleted or the person declines your friend request.
+	 * Gets called when a friend is deleted or the person declines your friend
+	 * request.
 	 * 
-	 * @param userId The XMPP-address of the user who deleted you or declined your friend request (e.g. sum12345678@pvp.net).
+	 * @param userId
+	 *            The XMPP-address of the user who deleted you or declined your
+	 *            friend request (e.g. sum12345678@pvp.net).
 	 */
 	public void onRemoveFriend(String userId);
 

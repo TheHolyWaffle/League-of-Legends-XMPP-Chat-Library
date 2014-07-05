@@ -139,7 +139,7 @@ public class LolStatus {
 
 	private static final XMLOutputter outputter = new XMLOutputter();
 
-	private Document doc;
+	private final Document doc;
 
 	/**
 	 * Generate a default LoLStatus that can later be modified and be used to
@@ -150,7 +150,7 @@ public class LolStatus {
 		outputter
 				.setFormat(outputter.getFormat().setExpandEmptyElements(false));
 		doc = new Document(new Element("body"));
-		for (XMLProperty p : XMLProperty.values()) {
+		for (final XMLProperty p : XMLProperty.values()) {
 			doc.getRootElement().addContent(new Element(p.toString()));
 		}
 	}
@@ -168,11 +168,11 @@ public class LolStatus {
 	public LolStatus(String xml) throws JDOMException, IOException {
 		outputter
 				.setFormat(outputter.getFormat().setExpandEmptyElements(false));
-		SAXBuilder saxBuilder = new SAXBuilder();
+		final SAXBuilder saxBuilder = new SAXBuilder();
 		doc = saxBuilder.build(new StringReader(xml));
-		for (Element e : doc.getRootElement().getChildren()) {
+		for (final Element e : doc.getRootElement().getChildren()) {
 			boolean found = false;
-			for (XMLProperty p : XMLProperty.values()) {
+			for (final XMLProperty p : XMLProperty.values()) {
 				if (p.name().equals(e.getName())) {
 					found = true;
 				}
@@ -185,14 +185,14 @@ public class LolStatus {
 	}
 
 	@Override
-	public boolean equals(Object other) {
+	public final boolean equals(Object other) {
 		if (other == null)
 			return false;
 		if (other == this)
 			return true;
 		if (!(other instanceof LolStatus))
 			return false;
-		LolStatus otherStatus = (LolStatus) other;
+		final LolStatus otherStatus = (LolStatus) other;
 		Diff diff;
 		try {
 			diff = new Diff(otherStatus.toString(), toString());
@@ -204,7 +204,7 @@ public class LolStatus {
 	}
 
 	private String get(XMLProperty p) {
-		Element child = getElement(p);
+		final Element child = getElement(p);
 		if (child == null) {
 			return "";
 		}
@@ -240,9 +240,9 @@ public class LolStatus {
 	}
 
 	public GameStatus getGameStatus() {
-		String status = get(XMLProperty.gameStatus);
+		final String status = get(XMLProperty.gameStatus);
 		if (!status.isEmpty()) {
-			for (GameStatus s : GameStatus.values()) {
+			for (final GameStatus s : GameStatus.values()) {
 				if (s.internal.equals(status)) {
 					return s;
 				}
@@ -254,7 +254,7 @@ public class LolStatus {
 	}
 
 	private int getInt(XMLProperty p) {
-		String value = get(p);
+		final String value = get(p);
 		if (value.isEmpty()) {
 			return -1;
 		}
@@ -266,7 +266,7 @@ public class LolStatus {
 	}
 
 	private long getLong(XMLProperty p) {
-		String value = get(p);
+		final String value = get(p);
 		if (value.isEmpty()) {
 			return -1L;
 		}
@@ -300,7 +300,7 @@ public class LolStatus {
 	}
 
 	public Division getRankedLeagueDivision() {
-		String div = get(XMLProperty.rankedLeagueDivision);
+		final String div = get(XMLProperty.rankedLeagueDivision);
 		if (!div.isEmpty()) {
 			return Division.valueOf(div);
 		}
@@ -316,7 +316,7 @@ public class LolStatus {
 	}
 
 	public Tier getRankedLeagueTier() {
-		String tier = get(XMLProperty.rankedLeagueTier);
+		final String tier = get(XMLProperty.rankedLeagueTier);
 		if (!tier.isEmpty()) {
 			return Tier.valueOf(tier);
 		}
@@ -360,7 +360,7 @@ public class LolStatus {
 	}
 
 	public Tier getTier() {
-		String tier = get(XMLProperty.tier);
+		final String tier = get(XMLProperty.tier);
 		if (!tier.isEmpty()) {
 			return Tier.valueOf(tier);
 		}
@@ -368,7 +368,7 @@ public class LolStatus {
 	}
 
 	public Date getTimestamp() {
-		long l = getLong(XMLProperty.timeStamp);
+		final long l = getLong(XMLProperty.timeStamp);
 		if (l > 0) {
 			return new Date(l);
 		}

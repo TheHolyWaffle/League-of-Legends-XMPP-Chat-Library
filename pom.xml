@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.theholywaffle</groupId>
 	<artifactId>lolchatapi</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.2</version>
 
 	<issueManagement>
 		<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/issues</url>
@@ -88,17 +88,30 @@
 				<version>2.9.1</version>
 				<executions>
 					<execution>
-						<id>attach-javadocs</id>
+						<id>attach-javadocs1</id>
+						<configuration>
+							<quiet>true</quiet>
+							<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!-- com.github.theholywaffle.lolchatapi.example: -->
+							<show>public</show>
+							<outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
+						</configuration>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>attach-javadocs2</id>
+						<configuration>
+							<quiet>true</quiet>
+							<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!-- com.github.theholywaffle.lolchatapi.example: -->
+							<show>public</show>
+							<outputDirectory>${project.build.directory}/apidocs/latest</outputDirectory>
+						</configuration>
 						<goals>
 							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<quiet>true</quiet>
-					<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!-- com.github.theholywaffle.lolchatapi.example: -->
-					<show>public</show>
-				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-deploy-plugin</artifactId>
@@ -111,22 +124,42 @@
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
 				<version>0.9</version>
-				<configuration>
-					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-					<merge>true</merge>
-					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-					<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
-					<includes>
-						<include>**/*</include>
-					</includes>
-					<repositoryName>League-of-Legends-XMPP-Chat-Library</repositoryName>      <!-- github repo name -->
-					<repositoryOwner>TheHolyWaffle</repositoryOwner>    <!-- github username -->
-				</configuration>
 				<executions>
 					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
 						'deploy' phase -->
 					<execution>
+						<id>execution1</id>
+						<configuration>
+							<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+							<merge>true</merge>
+							<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+							<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+							<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<repositoryName>League-of-Legends-XMPP-Chat-Library</repositoryName>      <!-- github repo name -->
+							<repositoryOwner>TheHolyWaffle</repositoryOwner>    <!-- github username -->
+						</configuration>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+					<execution>
+						<id>execution2</id>
+						<configuration>
+							<message>Javadoc for ${project.version}</message>  <!-- git commit message -->
+							<merge>true</merge>
+							<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+							<outputDirectory>${project.build.directory}/apidocs</outputDirectory> <!-- matches distribution management repository url above -->
+							<branch>refs/heads/gh-pages</branch>                       <!-- remote branch name -->
+							<includes>
+								<include>**/*</include>
+							</includes>
+							<repositoryName>League-of-Legends-XMPP-Chat-Library</repositoryName>      <!-- github repo name -->
+							<repositoryOwner>TheHolyWaffle</repositoryOwner>    <!-- github username -->
+						</configuration>
 						<goals>
 							<goal>site</goal>
 						</goals>
@@ -134,30 +167,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-publish-plugin</artifactId>
-				<version>1.1</version>
-				<configuration>
-					<checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
-					<checkinComment>Publishing javadoc for
-						${project.artifactId}:${project.version}</checkinComment>
-					<content>${project.reporting.outputDirectory}/apidocs</content>
-					<skipDeletedFiles>true</skipDeletedFiles>
-					<pubScmUrl>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</pubScmUrl>
-					<scmBranch>gh-pages</scmBranch> <!-- branch with static site -->
-				</configuration>
-				<executions>
-					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
-						'deploy' phase -->
-					<execution>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
-			</plugin>
+
 		</plugins>
 		<pluginManagement>
 			<plugins>

@@ -1,5 +1,5 @@
-
 import com.github.theholywaffle.lolchatapi.ChatServer;
+import com.github.theholywaffle.lolchatapi.FriendRequestPolicy;
 import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
@@ -12,7 +12,8 @@ public class ListenerExample {
 	}
 
 	public ListenerExample() {
-		LolChat api = new LolChat(ChatServer.EUW);
+		final LolChat api = new LolChat(ChatServer.EUW,
+				FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
 		/** First add or set all listeners BEFORE logging in! */
 
 		// Example 1: Adding FriendListeners - listens to changes in your
@@ -75,6 +76,7 @@ public class ListenerExample {
 		});
 
 		if (api.login("myusername", "mypassword")) {
+			System.out.println("Loaded!");
 			// ...
 		}
 	}

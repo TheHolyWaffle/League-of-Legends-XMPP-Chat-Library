@@ -26,17 +26,20 @@ package com.github.theholywaffle.lolchatapi.listeners;
  * #L%
  */
 
-
 public interface FriendRequestListener {
 
 	/**
 	 * Gets called when a user tries to add you to his friendslist.
 	 * 
 	 * @param userId
-	 *            The user who wants to add you (e.g. sum12345678@pvp.net)
+	 *            The id of the user who wants to add you (e.g.
+	 *            sum12345678@pvp.net)
+	 * @param name
+	 *            The name of the user or null if a Riot API key is not
+	 *            provided.
 	 * @return True if you want to add this user, false if you want to ignore
 	 *         his request
 	 */
-	public boolean onFriendRequest(String userId);
+	public boolean onFriendRequest(String userId, String name);
 
 }

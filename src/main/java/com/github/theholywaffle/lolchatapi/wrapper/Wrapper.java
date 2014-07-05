@@ -33,7 +33,7 @@ import com.github.theholywaffle.lolchatapi.LolChat;
 public class Wrapper<E> {
 
 	protected XMPPConnection con;
-	private E object;
+	private final E object;
 	protected LolChat api;
 
 	protected Wrapper(LolChat api, XMPPConnection con, E object) {

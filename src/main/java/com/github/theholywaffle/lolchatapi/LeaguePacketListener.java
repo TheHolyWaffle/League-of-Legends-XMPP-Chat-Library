@@ -26,6 +26,8 @@ package com.github.theholywaffle.lolchatapi;
  * #L%
  */
 
+import java.io.IOException;
+
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -36,17 +38,35 @@ import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
 
 public class LeaguePacketListener implements PacketListener {
 
-	private XMPPConnection connection;
+	private final XMPPConnection connection;
 	private FriendRequestListener requestListener;
-	private LolChat api;
+	private final LolChat api;
 
 	public LeaguePacketListener(LolChat api, XMPPConnection connection) {
 		this.api = api;
 		this.connection = connection;
 	}
 
+	private void accept(String from) throws NotConnectedException {
+		final Presence newp = new Presence(Presence.Type.subscribed);
+		newp.setTo(from);
+		connection.sendPacket(newp);
+		final Presence subscription = new Presence(Presence.Type.subscribe);
+		subscription.setTo(from);
+		connection.sendPacket(subscription);
+		if (api.isOnline()) {
+			api.setOnline();
+		}
+	}
+
+	private void decline(String from) throws NotConnectedException {
+		final Presence newp = new Presence(Presence.Type.unsubscribed);
+		newp.setTo(from);
+		connection.sendPacket(newp);
+	}
+
 	public void processPacket(Packet packet) throws NotConnectedException {
-		Presence presence = (Presence) packet;
+		final Presence presence = (Presence) packet;
 		if (presence.getType().equals(Presence.Type.subscribe)) {
 
 			switch (api.getFriendRequestPolicy()) {
@@ -57,7 +77,16 @@ public class LeaguePacketListener implements PacketListener {
 
 			case MANUAL:
 				if (requestListener != null) {
-					if (requestListener.onFriendRequest(presence.getFrom())) {
+					String name = null;
+					if (api.getRiotApi() != null) {
+						try {
+							name = api.getRiotApi().getName(presence.getFrom());
+						} catch (final IOException e) {
+							e.printStackTrace();
+						}
+					}
+					if (requestListener.onFriendRequest(presence.getFrom(),
+							name)) {
 						accept(presence.getFrom());
 					} else {
 						decline(presence.getFrom());
@@ -78,24 +107,6 @@ public class LeaguePacketListener implements PacketListener {
 
 	public void setFriendRequestListener(FriendRequestListener requestListener) {
 		this.requestListener = requestListener;
-	}
-
-	private void accept(String from) throws NotConnectedException {
-		Presence newp = new Presence(Presence.Type.subscribed);
-		newp.setTo(from);
-		connection.sendPacket(newp);
-		Presence subscription = new Presence(Presence.Type.subscribe);
-		subscription.setTo(from);
-		connection.sendPacket(subscription);
-		if (api.isOnline()) {
-			api.setOnline();
-		}		
-	}
-
-	private void decline(String from) throws NotConnectedException {
-		Presence newp = new Presence(Presence.Type.unsubscribed);
-		newp.setTo(from);
-		connection.sendPacket(newp);
 	}
 
 }
