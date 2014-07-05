@@ -3,10 +3,10 @@
   <groupId>com.github.theholywaffle</groupId>
   <artifactId>lolchatapi</artifactId>
   <versioning>
-    <release>1.1.1</release>
+    <release>1.1.2</release>
     <versions>
-      <version>1.1.1</version>
+      <version>1.1.2</version>
     </versions>
-    <lastUpdated>20140705132640</lastUpdated>
+    <lastUpdated>20140705144430</lastUpdated>
   </versioning>
 </metadata>
