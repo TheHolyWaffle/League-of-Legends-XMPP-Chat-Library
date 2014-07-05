@@ -1,4 +1,4 @@
-package com.github.theholywaffle.lolchatapi;
+package com.github.theholywaffle.lolchatapi.riotapi;
 
 /*
  * #%L
@@ -27,23 +27,45 @@ package com.github.theholywaffle.lolchatapi;
  */
 
 
-import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
+import java.util.LinkedList;
 
-public enum FriendRequestPolicy {
+public class RateLimiter {
 
-	/**
-	 * Accepts all new Friend requests.
-	 */
-	ACCEPT_ALL,
-	/**
-	 * Rejects all new Friend requests.
-	 */
-	REJECT_ALL,
-	/**
-	 * Accepts new Friend requests based on your FriendRequestListener. See {@link LolChat#setFriendRequestListener(FriendRequestListener)}.
-	 * 
-	 * @see FriendRequestListener
-	 */
-	MANUAL;
+	private LinkedList<Long> list = new LinkedList<Long>();
+
+	private int amount;
+	private int timespan;
+
+	public RateLimiter(int amount, int timespan) {
+		this.amount = amount;
+		this.timespan = timespan;
+	}
+
+	public void acquire() {
+		remove();
+		while (list.size() >= amount) {
+			try {
+				Thread.sleep(20);
+			} catch (InterruptedException e) {
+			}
+			remove();
+		}		
+	}
+	
+	public void enter(){
+		list.addFirst(System.currentTimeMillis() + timespan);
+	}
+
+	private void remove() {
+		boolean searching = true;
+		while (searching && list.size() > 0) {
+			long element = list.getLast();
+			if (element < System.currentTimeMillis()) {
+				list.removeLast();
+			} else {
+				searching = false;
+			}
+		}
+	}
 
 }

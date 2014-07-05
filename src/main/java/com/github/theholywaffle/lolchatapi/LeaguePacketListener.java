@@ -26,7 +26,6 @@ package com.github.theholywaffle.lolchatapi;
  * #L%
  */
 
-
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPConnection;
@@ -47,28 +46,56 @@ public class LeaguePacketListener implements PacketListener {
 	}
 
 	public void processPacket(Packet packet) throws NotConnectedException {
-		if (api.getFriendRequestPolicy() != FriendRequestPolicy.MANUAL) {
-			return;
-		}
 		Presence presence = (Presence) packet;
 		if (presence.getType().equals(Presence.Type.subscribe)) {
-			if (requestListener.onFriendRequest(presence.getFrom())) {
-				Presence newp = new Presence(Presence.Type.subscribed);
-				newp.setTo(presence.getFrom());
-				connection.sendPacket(newp);
-				Presence subscription = new Presence(Presence.Type.subscribe);
-				subscription.setTo(presence.getFrom());
-				connection.sendPacket(subscription);
-			} else {
-				Presence newp = new Presence(Presence.Type.unsubscribed);
-				newp.setTo(presence.getFrom());
-				connection.sendPacket(newp);
+
+			switch (api.getFriendRequestPolicy()) {
+
+			case ACCEPT_ALL:
+				accept(presence.getFrom());
+				break;
+
+			case MANUAL:
+				if (requestListener != null) {
+					if (requestListener.onFriendRequest(presence.getFrom())) {
+						accept(presence.getFrom());
+					} else {
+						decline(presence.getFrom());
+					}
+				} else {
+					System.err
+							.println("FriendRequestListener is null when FriendRequestPolicy is MANUAL!");
+				}
+				break;
+
+			case REJECT_ALL:
+				decline(presence.getFrom());
+				break;
 			}
+
 		}
 	}
 
 	public void setFriendRequestListener(FriendRequestListener requestListener) {
 		this.requestListener = requestListener;
+	}
+
+	private void accept(String from) throws NotConnectedException {
+		Presence newp = new Presence(Presence.Type.subscribed);
+		newp.setTo(from);
+		connection.sendPacket(newp);
+		Presence subscription = new Presence(Presence.Type.subscribe);
+		subscription.setTo(from);
+		connection.sendPacket(subscription);
+		if (api.isOnline()) {
+			api.setOnline();
+		}		
+	}
+
+	private void decline(String from) throws NotConnectedException {
+		Presence newp = new Presence(Presence.Type.unsubscribed);
+		newp.setTo(from);
+		connection.sendPacket(newp);
 	}
 
 }

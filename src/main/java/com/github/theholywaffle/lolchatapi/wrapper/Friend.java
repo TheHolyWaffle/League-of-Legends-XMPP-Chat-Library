@@ -27,12 +27,14 @@ package com.github.theholywaffle.lolchatapi.wrapper;
  */
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.jdom2.JDOMException;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.RosterGroup;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException.NotLoggedInException;
@@ -155,10 +157,16 @@ public class Friend extends Wrapper<RosterEntry> {
 	/**
 	 * Gets the FriendGroup that contains this friend.
 	 * 
-	 * @return the FriendGroup that currently contains this Friend
+	 * @return the FriendGroup that currently contains this Friend or null if
+	 *         this Friend is not in a FriendGroup.
 	 */
 	public FriendGroup getGroup() {
-		return new FriendGroup(api, con, get().getGroups().iterator().next());
+		Collection<RosterGroup> groups = get().getGroups();
+		if (groups.size() > 0) {
+			return new FriendGroup(api, con, get().getGroups().iterator()
+					.next());
+		}
+		return null;
 	}
 
 	/**
@@ -166,12 +174,17 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * 
 	 * @return name of this Friend or an empty String if no name is assigned.
 	 */
-	public String getName() {
+	public String getName() {		
 		String name = get().getName();
-		if (name != null) {
-			return name;
+		if (name == null && api.getRiotApi() != null) {
+			try {
+				name = api.getRiotApi().getName(getUserId());
+				setName(name);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return "";
+		return name;
 	}
 
 	/**

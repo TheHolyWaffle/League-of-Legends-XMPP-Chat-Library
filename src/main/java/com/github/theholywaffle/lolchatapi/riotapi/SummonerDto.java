@@ -1,4 +1,4 @@
-package com.github.theholywaffle.lolchatapi;
+package com.github.theholywaffle.lolchatapi.riotapi;
 
 /*
  * #%L
@@ -27,23 +27,31 @@ package com.github.theholywaffle.lolchatapi;
  */
 
 
-import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
+public class SummonerDto {
 
-public enum FriendRequestPolicy {
+	private long id;
+	private String name;
+	private int profileIconId;
+	private long revisionDate;
+	private long summonerLevel;
 
-	/**
-	 * Accepts all new Friend requests.
-	 */
-	ACCEPT_ALL,
-	/**
-	 * Rejects all new Friend requests.
-	 */
-	REJECT_ALL,
-	/**
-	 * Accepts new Friend requests based on your FriendRequestListener. See {@link LolChat#setFriendRequestListener(FriendRequestListener)}.
-	 * 
-	 * @see FriendRequestListener
-	 */
-	MANUAL;
+	public long getId() {
+		return id;
+	}
 
+	public String getName() {
+		return name;
+	}
+
+	public int getProfileIconId() {
+		return profileIconId;
+	}
+
+	public long getRevisionDate() {
+		return revisionDate;
+	}
+
+	public long getSummonerLevel() {
+		return summonerLevel;
+	}
 }

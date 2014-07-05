@@ -1,5 +1,4 @@
 
-
 import com.github.theholywaffle.lolchatapi.ChatServer;
 import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
@@ -14,47 +13,44 @@ public class ListenerExample {
 
 	public ListenerExample() {
 		LolChat api = new LolChat(ChatServer.EUW);
-		/** First add or set all listeners BEFORE logging in!*/
-		
+		/** First add or set all listeners BEFORE logging in! */
+
 		// Example 1: Adding FriendListeners - listens to changes in your
 		// friendlist
 		api.addFriendListener(new FriendListener() {
-			int i = 0;
 
 			public void onFriendAvailable(Friend friend) {
-				System.out.println("[" + i + "]" + friend.getName()
-						+ " is available!");
-				i++;
+				System.out.println(friend.getName() + " is available!");
 			}
 
 			public void onFriendAway(Friend friend) {
-				System.out.println("[" + i + "]" + friend.getName()
-						+ " is away!");
-				i++;
+				System.out.println(friend.getName() + " is away!");
 			}
 
 			public void onFriendBusy(Friend friend) {
-				System.out.println("[" + i + "]" + friend.getName()
-						+ " is busy!");
-				i++;
+				System.out.println(friend.getName() + " is busy!");
 			}
 
 			public void onFriendJoin(Friend friend) {
-				System.out.println("[" + i + "]" + friend.getName()
-						+ " joined!");
-				i++;
+				System.out.println(friend.getName() + " joined!");
 			}
 
 			public void onFriendLeave(Friend friend) {
-				System.out.println("[" + i + "]" + friend.getName() + " left!");
-				i++;
+				System.out.println(friend.getName() + " left!");
 			}
 
 			public void onFriendStatusChange(Friend friend) {
-				System.out.println("[" + i + "]" + friend.getName()
+				System.out.println(friend.getName()
 						+ " status changed! New GameStatus: "
 						+ friend.getStatus().getGameStatus());
-				i++;
+			}
+
+			public void onNewFriend(Friend friend) {
+				System.out.println("New friend: " + friend.getUserId());
+			}
+
+			public void onRemoveFriend(String userId) {
+				System.out.println("Friend removed: " + userId);
 			}
 		});
 
@@ -77,9 +73,9 @@ public class ListenerExample {
 				System.out.println("Dyrus: " + message);
 			}
 		});
-		
+
 		if (api.login("myusername", "mypassword")) {
-			//...
+			// ...
 		}
 	}
 

@@ -38,12 +38,14 @@ import org.jivesoftware.smack.util.StringUtils;
 
 import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
+import com.github.theholywaffle.lolchatapi.wrapper.Friend.FriendStatus;
 
 public class LeagueRosterListener implements RosterListener {
 
 	private HashMap<String, Presence.Type> typeUsers = new HashMap<>();
 	private HashMap<String, Presence.Mode> modeUsers = new HashMap<>();
 	private HashMap<String, LolStatus> statusUsers = new HashMap<>();
+	private HashMap<String, FriendStatus> friendStatusUsers = new HashMap<>();
 	private LolChat api;
 
 	private boolean added;
@@ -55,9 +57,9 @@ public class LeagueRosterListener implements RosterListener {
 	}
 
 	public void entriesAdded(Collection<String> e) {
-		if (!added) {
-			for (String s : e) {
-				Friend f = api.getFriendById(s);
+		for (String s : e) {
+			Friend f = api.getFriendById(s);
+			if (!added && !api.isLoaded()) {
 				if (f.isOnline()) {
 					typeUsers.put(s, Presence.Type.available);
 					modeUsers.put(s, f.getChatMode().mode);
@@ -66,16 +68,35 @@ public class LeagueRosterListener implements RosterListener {
 					typeUsers.put(s, Presence.Type.unavailable);
 				}
 			}
-			added = true;
+			if(f.getGroup() == null){
+				api.getDefaultFriendGroup().addFriend(f);
+			}
+			
+			if(f.getFriendStatus() != FriendStatus.MUTUAL_FRIENDS){
+				friendStatusUsers.put(s, f.getFriendStatus());
+			}
 		}
-		System.out.println("Entries added"); // TODO remove
+		added = true;
 	}
 
 	public void entriesDeleted(Collection<String> e) {
-		System.out.println("Entries deleted"); // TODO remove
+		for (String s : e) {
+			friendStatusUsers.put(s, null);
+			for(FriendListener l : api.getFriendListeners()){
+				l.onRemoveFriend(s);
+			}
+		}
 	}
 
 	public void entriesUpdated(Collection<String> e) {
+		for (String s : e) {
+			Friend f = api.getFriendById(s);
+			FriendStatus previous = friendStatusUsers.get(s);
+			if (((previous != null && previous != FriendStatus.MUTUAL_FRIENDS) || previous == null || !api.isLoaded())	&& f.getFriendStatus() == FriendStatus.MUTUAL_FRIENDS) {
+				onNewFriend(f);
+			}
+			friendStatusUsers.put(s, f.getFriendStatus());
+		}
 	}
 
 	public boolean isLoaded() {
@@ -134,6 +155,12 @@ public class LeagueRosterListener implements RosterListener {
 					}
 				}
 			}
+		}
+	}
+	
+	private void onNewFriend(Friend f){
+		for(FriendListener l : api.getFriendListeners()){
+			l.onNewFriend(f);
 		}
 	}
 

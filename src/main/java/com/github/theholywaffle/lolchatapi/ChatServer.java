@@ -35,68 +35,75 @@ public enum ChatServer {
 	/**
 	 * Brazil
 	 */
-	BR("chat.br.lol.riotgames.com"),
+	BR("chat.br.lol.riotgames.com", "br.api.pvp.net"),
 	/**
 	 * Europe Nordic and East
 	 */
-	EUNE("chat.eun1.riotgames.com"),
+	EUNE("chat.eun1.riotgames.com", "eune.api.pvp.net"),
 	/**
 	 * Europe West
 	 */
-	EUW("chat.euw1.lol.riotgames.com"),	
+	EUW("chat.euw1.lol.riotgames.com", "euw.api.pvp.net"),
 	/**
 	 * Korea
 	 */
-	KR("chat.kr.lol.riotgames.com"),
+	KR("chat.kr.lol.riotgames.com", "kr.api.pvp.net"),
 	/**
 	 * Latin America North
 	 */
-	LAN("chat.la1.lol.riotgames.com"),
+	LAN("chat.la1.lol.riotgames.com", "lan.api.pvp.net"),
 	/**
 	 * Latin America South
 	 */
-	LAS("chat.la2.lol.riotgames.com"),
+	LAS("chat.la2.lol.riotgames.com", "las.api.pvp.net"),
 	/**
 	 * North-America
 	 */
-	NA("chat.na1.lol.riotgames.com"),
+	NA("chat.na1.lol.riotgames.com", "na.api.pvp.net"),
 	/**
 	 * Oceania
 	 */
-	OCE("chat.oc1.lol.riotgames.com"),
+	OCE("chat.oc1.lol.riotgames.com", "oce.api.pvp.net"),
 	/**
 	 * Public Beta Environment
 	 */
-	PBE("chat.pbe1.lol.riotgames.com"),
+	PBE("chat.pbe1.lol.riotgames.com", null),
 	/**
 	 * Phillipines
 	 */
-	PH("chatph.lol.garenanow.com"),
+	PH("chatph.lol.garenanow.com", null),
 	/**
 	 * Russia
 	 */
-	RU("chat.ru.lol.riotgames.com"),
+	RU("chat.ru.lol.riotgames.com", "ru.api.pvp.net"),
 	/**
 	 * Thailand
 	 */
-	TH("chatth.lol.garenanow.com"),
+	TH("chatth.lol.garenanow.com", null),
 	/**
 	 * Turkey
 	 */
-	TR("chat.tr.lol.riotgames.com"),
+	TR("chat.tr.lol.riotgames.com", "tr.api.pvp.net"),
 	/**
 	 * Taiwan
 	 */
-	TW("chattw.lol.garenanow.com"),
+	TW("chattw.lol.garenanow.com", null),
 	/**
 	 * Vietnam
 	 */
-	VN("chatvn.lol.garenanow.com");
+	VN("chatvn.lol.garenanow.com", null);
 
-	String host;
+	public String host;
+	public String api;
 
-	ChatServer(String host) {
+	ChatServer(String host, String api) {
 		this.host = host;
+		this.api = api;
+	}
+	
+	@Override
+	public String toString(){
+		return name().toLowerCase();
 	}
 
 }

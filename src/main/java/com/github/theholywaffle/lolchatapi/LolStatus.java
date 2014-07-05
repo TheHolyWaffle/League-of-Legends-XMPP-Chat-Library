@@ -54,12 +54,14 @@ public class LolStatus {
 		HOSTING_NORMAL_GAME("hostingNormalGame"),
 		HOSTING_PRACTICE_GAME("hostingPracticeGame"),
 		HOSTING_RANKED_GAME("hostingRankedGame"),
+		HOSTING_COOP_VS_AI_GAME("hostingCoopVsAIGame"),
 		IN_QUEUE("inQueue"),
 		SPECTATING("spectating"),
 		OUT_OF_GAME("outOfGame"),
 		CHAMPION_SELECT("championSelect"),
 		IN_GAME("inGame"),
-		IN_TEAMBUILDER("inTeamBuilder");
+		IN_TEAMBUILDER("inTeamBuilder"),
+		TUTORIAL("tutorial");
 
 		private String internal;
 
@@ -85,7 +87,11 @@ public class LolStatus {
 		RANKED_TEAM_5x5,
 		ONEFORALL_5x5,
 		FIRSTBLOOD_1x1,
-		FIRSTBLOOD_2x2;
+		FIRSTBLOOD_2x2,
+		SR_6x6,
+		CAP_5x5,
+		URF,
+		URF_BOT;
 	}
 
 	public enum Tier {

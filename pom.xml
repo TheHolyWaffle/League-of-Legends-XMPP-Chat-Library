@@ -96,7 +96,7 @@
 				</executions>
 				<configuration>
 					<quiet>true</quiet>
-					<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!--  com.github.theholywaffle.lolchatapi.example: -->
+					<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!-- com.github.theholywaffle.lolchatapi.example: -->
 					<show>public</show>
 				</configuration>
 			</plugin>
@@ -122,6 +122,30 @@
 					</includes>
 					<repositoryName>League-of-Legends-XMPP-Chat-Library</repositoryName>      <!-- github repo name -->
 					<repositoryOwner>TheHolyWaffle</repositoryOwner>    <!-- github username -->
+				</configuration>
+				<executions>
+					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
+						'deploy' phase -->
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-publish-plugin</artifactId>
+				<version>1.1</version>
+				<configuration>
+					<checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
+					<checkinComment>Publishing javadoc for
+						${project.artifactId}:${project.version}</checkinComment>
+					<content>${project.reporting.outputDirectory}/apidocs</content>
+					<skipDeletedFiles>true</skipDeletedFiles>
+					<pubScmUrl>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</pubScmUrl>
+					<scmBranch>gh-pages</scmBranch> <!-- branch with static site -->
 				</configuration>
 				<executions>
 					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
@@ -201,6 +225,12 @@
 			<artifactId>xmlunit</artifactId>
 			<version>1.5</version>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
+		</dependency>
+
 	</dependencies>
 
 	<name>League of Legends XMPP Chat Library</name>

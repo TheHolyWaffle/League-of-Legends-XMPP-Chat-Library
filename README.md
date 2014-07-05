@@ -26,7 +26,8 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 		</snapshots>
 	</repository>
 </repositories>
-
+```
+```xml
 <dependencies>
 	<dependency>
 		<groupId>com.github.theholywaffle</groupId>

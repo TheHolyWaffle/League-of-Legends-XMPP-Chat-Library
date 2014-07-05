@@ -27,6 +27,7 @@ package com.github.theholywaffle.lolchatapi;
  */
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,7 @@ import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.Roster.SubscriptionMode;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterGroup;
 import org.jivesoftware.smack.SmackException;
@@ -56,11 +58,14 @@ import org.jivesoftware.spark.util.DummySSLSocketFactory;
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
+import com.github.theholywaffle.lolchatapi.riotapi.RiotApi;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend.FriendStatus;
 import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
 
 public class LolChat {
+
+	public static final String DEFAULT_FRIENDGROUP = "**Default";
 
 	private final XMPPConnection connection;
 	private final ArrayList<ChatListener> chatListeners = new ArrayList<>();
@@ -73,6 +78,8 @@ public class LolChat {
 	private LeagueRosterListener leagueRosterListener;
 	private LeaguePacketListener leaguePacketListener;
 	private FriendRequestPolicy friendRequestPolicy;
+	private boolean loaded;
+	private RiotApi riotApi;
 
 	/**
 	 * Represents a single connection to a League of Legends chatserver. Default
@@ -84,7 +91,7 @@ public class LolChat {
 	 *            The chatserver of the region you want to connect to
 	 */
 	public LolChat(ChatServer server) {
-		this(server, FriendRequestPolicy.ACCEPT_ALL);
+		this(server, FriendRequestPolicy.ACCEPT_ALL, null);
 	}
 
 	/**
@@ -99,8 +106,32 @@ public class LolChat {
 	 * @see LolChat#setFriendRequestListener(FriendRequestListener)
 	 */
 	public LolChat(ChatServer server, FriendRequestPolicy friendRequestPolicy) {
+		this(server, friendRequestPolicy, null);
+	}
+
+	/**
+	 * Represents a single connection to a League of Legends chatserver.
+	 * 
+	 * @param server
+	 *            The chatserver of the region you want to connect to
+	 * @param friendRequestPolicy
+	 *            Determines how new Friend requests are treated.
+	 * @param apiKey
+	 *            Your apiKey used to convert summonerId's to name. You can get
+	 *            your key here <a
+	 *            href="https://developer.riotgames.com/">developer
+	 *            .riotgames.com</a>
+	 * 
+	 * @see LolChat#setFriendRequestPolicy(FriendRequestPolicy)
+	 * @see LolChat#setFriendRequestListener(FriendRequestListener)
+	 */
+	public LolChat(ChatServer server, FriendRequestPolicy friendRequestPolicy,
+			String apiKey) {
 		this.friendRequestPolicy = friendRequestPolicy;
-		Roster.setDefaultSubscriptionMode(friendRequestPolicy.mode);
+		if (apiKey != null && server.api != null) {
+			this.riotApi = RiotApi.build(apiKey, server);
+		}
+		Roster.setDefaultSubscriptionMode(SubscriptionMode.manual);
 		ConnectionConfiguration config = new ConnectionConfiguration(
 				server.host, 5223, "pvp.net");
 		config.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
@@ -111,6 +142,7 @@ public class LolChat {
 			connection.connect();
 		} catch (XMPPException | SmackException | IOException e) {
 			System.err.println("Failed to connect to " + server.host);
+			return;
 		}
 		addListeners();
 		new Thread(new Runnable() {
@@ -152,6 +184,26 @@ public class LolChat {
 		connection.getRoster().addRosterListener(
 				leagueRosterListener = new LeagueRosterListener(this,
 						connection));
+		connection.addPacketListener(
+				leaguePacketListener = new LeaguePacketListener(this,
+						connection), new PacketFilter() {
+					public boolean accept(Packet packet) {
+						if (packet instanceof Presence) {
+							Presence presence = (Presence) packet;
+							if (presence.getType().equals(
+									Presence.Type.subscribed)
+									|| presence.getType().equals(
+											Presence.Type.subscribe)
+									|| presence.getType().equals(
+											Presence.Type.unsubscribed)
+									|| presence.getType().equals(
+											Presence.Type.unsubscribe)) {
+								return true;
+							}
+						}
+						return false;
+					}
+				});
 		ChatManager.getInstanceFor(connection).addChatListener(
 				new ChatManagerListener() {
 
@@ -171,11 +223,7 @@ public class LolChat {
 									}
 								}
 							});
-						} else {
-							System.err
-									.println("Friend is null in chat creation");
 						}
-
 					}
 				});
 	}
@@ -184,55 +232,127 @@ public class LolChat {
 	 * Sends an friend request to an other user.
 	 * 
 	 * @param userId
-	 *            The userId of the user you want to add.
+	 *            The userId of the user you want to add (e.g.
+	 *            sum12345678@pvp.net).
 	 */
-	public void addUser(String userId) {
-		addUser(userId, null, getDefaultFriendGroup());
+	public void addFriendById(String userId) {
+		addFriendById(userId, null, getDefaultFriendGroup());
 	}
 
 	/**
 	 * Sends an friend request to an other user.
 	 * 
 	 * @param userId
-	 *            The userId of the user you want to add.
+	 *            The userId of the user you want to add (e.g.
+	 *            sum12345678@pvp.net).
 	 * @param friendGroup
 	 *            The FriendGroup you want to put this user in.
 	 */
-	public void addUser(String userId, FriendGroup friendGroup) {
-		addUser(userId, null, friendGroup);
+	public void addFriendById(String userId, FriendGroup friendGroup) {
+		addFriendById(userId, null, friendGroup);
 	}
 
 	/**
 	 * Sends an friend request to an other user.
 	 * 
 	 * @param userId
-	 *            The userId of the user you want to add.
+	 *            The userId of the user you want to add (e.g.
+	 *            sum12345678@pvp.net).
 	 * @param name
 	 *            The name you want to assign to this user.
 	 */
-	public void addUser(String userId, String name) {
-		addUser(userId, name, getDefaultFriendGroup());
+	public void addFriendById(String userId, String name) {
+		addFriendById(userId, name, getDefaultFriendGroup());
+	}
+
+	/**
+	 * Sends an friend request to an other user. An Riot API key is required for
+	 * this.
+	 * 
+	 * @param name
+	 *            The name of the Friend you want to add (case insensitive)
+	 * @return True if succesful otherwise false.
+	 */
+	public boolean addFriendByName(String name) {
+		return addFriendByName(name, getDefaultFriendGroup());
+	}
+
+	/**
+	 * Sends an friend request to an other user. An Riot API key is required for
+	 * this.
+	 * 
+	 * @param name
+	 *            The name of the Friend you want to add (case insensitive)
+	 * @param friendGroup
+	 *            The FriendGroup you want to put this user in.
+	 * @return True if succesful otherwise false.
+	 */
+	public boolean addFriendByName(String name, FriendGroup friendGroup) {
+		if (getRiotApi() != null) {
+			try {
+				StringBuilder buf = new StringBuilder();
+				buf.append("sum");
+				buf.append(getRiotApi().getSummonerId(name));
+				buf.append("@pvp.net");
+				addFriendById(buf.toString(), name, friendGroup);
+				return true;
+			} catch (IOException | URISyntaxException e) {
+				e.printStackTrace();
+				return false;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * Sends an friend request to an other user.
 	 * 
 	 * @param userId
-	 *            The userId of the user you want to add.
+	 *            The userId of the user you want to add (e.g.
+	 *            sum12345678@pvp.net).
 	 * @param name
 	 *            The name you want to assign to this user.
 	 * @param friendGroup
 	 *            The FriendGroup you want to put this user in.
 	 */
-	public void addUser(String userId, String name, FriendGroup friendGroup) {
+	public void addFriendById(String userId, String name,
+			FriendGroup friendGroup) {
+		if (name == null && getRiotApi() != null) {
+			try {
+				name = getRiotApi().getName(userId);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		try {
-			connection.getRoster().createEntry(
-					StringUtils.parseBareAddress(userId), name,
-					new String[] { friendGroup.getName() });
+			connection
+					.getRoster()
+					.createEntry(
+							StringUtils.parseBareAddress(userId),
+							name,
+							new String[] { friendGroup == null ? getDefaultFriendGroup()
+									.getName() : friendGroup.getName() });
 		} catch (NotLoggedInException | NoResponseException
 				| XMPPErrorException | NotConnectedException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Creates a new FriendGroup. If this FriendGroup contains no Friends when
+	 * you logout it will be erased from the server.
+	 * 
+	 * @param name
+	 *            The name of this FriendGroup
+	 * @return The new FriendGroup or null if a FriendGroup with this name
+	 *         already exists.
+	 */
+	public FriendGroup addFriendGroup(String name) {
+		RosterGroup g = connection.getRoster().createGroup(name);
+		if (g != null) {
+			return new FriendGroup(this, connection, g);
+		}
+		return null;
 	}
 
 	/**
@@ -260,15 +380,10 @@ public class LolChat {
 	/**
 	 * Gets the default FriendGroup.
 	 * 
-	 * @return default FriendGroup
+	 * @return Default FriendGroup
 	 */
 	public FriendGroup getDefaultFriendGroup() {
-		FriendGroup group = getFriendGroupByName("**Default");
-		if (group != null) {
-			return group;
-		}
-		return new FriendGroup(this, connection, connection.getRoster()
-				.createGroup("**Default"));
+		return getFriendGroupByName(DEFAULT_FRIENDGROUP);
 	}
 
 	/**
@@ -294,16 +409,20 @@ public class LolChat {
 	 * @param xmppAddress
 	 *            For example sum12345678@pvp.net
 	 * @return The corresponding Friend or null if user is not found or he is
-	 *         not a friend of you
+	 *         not a friend of you.
 	 */
 	public Friend getFriendById(String xmppAddress) {
-		return new Friend(this, connection, connection.getRoster().getEntry(
-				StringUtils.parseBareAddress(xmppAddress)));
+		RosterEntry entry = connection.getRoster().getEntry(
+				StringUtils.parseBareAddress(xmppAddress));
+		if (entry != null) {
+			return new Friend(this, connection, entry);
+		}
+		return null;
 	}
 
 	/**
 	 * Gets a friend based on his name. The name is case insensitive. Beware:
-	 * some names of Friends can be null.
+	 * some names of Friends can be null unless an riot API Key is provided.
 	 * 
 	 * @param name
 	 *            The name of your friend, for example "Dyrus"
@@ -314,6 +433,13 @@ public class LolChat {
 		return getFriend(new Filter<Friend>() {
 
 			public boolean accept(Friend friend) {
+				if (friend.getName() == null && getRiotApi() != null) {
+					try {
+						friend.setName(getRiotApi().getName(friend.getUserId()));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				return friend.getName() != null
 						&& friend.getName().equalsIgnoreCase(name);
 			}
@@ -321,19 +447,19 @@ public class LolChat {
 	}
 
 	/**
-	 * Get a FriendGroup by name, for example "Duo Partners". The name is case
-	 * sensitive!
+	 * Gets a FriendGroup by name, for example "Duo Partners". The name is case
+	 * sensitive! The FriendGroup will be created if it didn't exist yet.
 	 * 
 	 * @param name
 	 *            The name of your group
-	 * @return The corresponding FriendGroup or null if not found
+	 * @return The corresponding FriendGroup
 	 */
 	public FriendGroup getFriendGroupByName(String name) {
 		RosterGroup g = connection.getRoster().getGroup(name);
 		if (g != null) {
 			return new FriendGroup(this, connection, g);
 		}
-		return null;
+		return addFriendGroup(name);
 	}
 
 	/**
@@ -443,6 +569,18 @@ public class LolChat {
 	}
 
 	/**
+	 * Gets the RiotApi used to resolve summonerId's and summoner names. Is null
+	 * when no apiKey is provided or the region is not supported by the riot
+	 * api.
+	 * 
+	 * @return The RiotApi object or null if no apiKey is provided or the region
+	 *         is not supported by the riot api.
+	 */
+	public RiotApi getRiotApi() {
+		return riotApi;
+	}
+
+	/**
 	 * Logs in to the chat server without replacing the official connection of
 	 * the League of Legends client. This call is asynchronous. BEWARE: add/set
 	 * all listeners before logging in, otherwise some offline messages can get
@@ -493,6 +631,7 @@ public class LolChat {
 				} catch (InterruptedException e) {
 				}
 			}
+			loaded = true;
 			return true;
 		}
 		return false;
@@ -539,33 +678,7 @@ public class LolChat {
 	 */
 	public void setFriendRequestListener(
 			FriendRequestListener friendRequestListener) {
-		if (leaguePacketListener == null) {
-			leaguePacketListener = new LeaguePacketListener(this, connection);
-			leaguePacketListener
-					.setFriendRequestListener(friendRequestListener);
-			connection.addPacketListener(leaguePacketListener,
-					new PacketFilter() {
-						public boolean accept(Packet packet) {
-							if (packet instanceof Presence) {
-								Presence presence = (Presence) packet;
-								if (presence.getType().equals(
-										Presence.Type.subscribed)
-										|| presence.getType().equals(
-												Presence.Type.subscribe)
-										|| presence.getType().equals(
-												Presence.Type.unsubscribed)
-										|| presence.getType().equals(
-												Presence.Type.unsubscribe)) {
-									return true;
-								}
-							}
-							return false;
-						}
-					});
-		} else {
-			leaguePacketListener
-					.setFriendRequestListener(friendRequestListener);
-		}
+		leaguePacketListener.setFriendRequestListener(friendRequestListener);
 	}
 
 	/**
@@ -576,7 +689,26 @@ public class LolChat {
 	 * @see FriendRequestPolicy
 	 */
 	public void setFriendRequestPolicy(FriendRequestPolicy friendRequestPolicy) {
-		connection.getRoster().setSubscriptionMode(friendRequestPolicy.mode);
+		this.friendRequestPolicy = friendRequestPolicy;
+	}
+
+	/**
+	 * Returns true if your appearance is set to online, otherwise false.
+	 * 
+	 * @return True if your appearance is set to online, otherwise false.
+	 */
+	public boolean isOnline() {
+		return type == Presence.Type.available;
+	}
+
+	/**
+	 * Returns true if server has sent us all information after logging in.
+	 * 
+	 * @return True if server has sent us all information after logging in,
+	 *         otherwise false.
+	 */
+	public boolean isLoaded() {
+		return loaded;
 	}
 
 	/**
