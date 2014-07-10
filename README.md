@@ -50,7 +50,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 **Example:**
 
 ```java
-final LolChat api = new LolChat(ChatServer.EUW, FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
+final LolChat api = new LolChat(ChatServer.EUW, FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY",RateLimit.DEFAULT));
 if (api.login("myusername", "mypassword")) {
 
 	// Example 1: Send Chat Message to all your friends

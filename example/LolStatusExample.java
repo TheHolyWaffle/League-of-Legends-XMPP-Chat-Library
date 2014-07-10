@@ -4,6 +4,8 @@ import com.github.theholywaffle.lolchatapi.LolChat;
 import com.github.theholywaffle.lolchatapi.LolStatus;
 import com.github.theholywaffle.lolchatapi.LolStatus.Queue;
 import com.github.theholywaffle.lolchatapi.LolStatus.Tier;
+import com.github.theholywaffle.lolchatapi.riotapi.RateLimit;
+import com.github.theholywaffle.lolchatapi.riotapi.RiotApiKey;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 
 /**
@@ -18,7 +20,7 @@ public class LolStatusExample {
 
 	public LolStatusExample() {
 		final LolChat api = new LolChat(ChatServer.EUW,
-				FriendRequestPolicy.ACCEPT_ALL, "RIOT-API-KEY");
+				FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY",RateLimit.DEFAULT));
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Print out all groups and all friends in those groups

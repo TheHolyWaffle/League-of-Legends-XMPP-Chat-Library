@@ -49,24 +49,25 @@ public class RiotApi {
 
 	private static Map<String, RiotApi> instances = new HashMap<>();
 
-	public static RiotApi build(String apiKey, ChatServer server) {
-		RiotApi api = instances.get(apiKey);
+	public static RiotApi build(RiotApiKey riotApiKey, ChatServer server) {
+		RiotApi api = instances.get(riotApiKey.getKey());
 		if (api == null) {
-			api = new RiotApi(apiKey, server);
-			instances.put(apiKey, api);
+			api = new RiotApi(riotApiKey, server);
+			instances.put(riotApiKey.getKey(), api);
 		}
 		return api;
 	}
-	private final String apiKey;
+	private final RiotApiKey riotApiKey;
 	private final ChatServer server;
 
 	private final List<RateLimiter> rateLimiters = new ArrayList<>();
 
-	private RiotApi(String apiKey, ChatServer server) {
-		this.apiKey = apiKey;
+	private RiotApi(RiotApiKey riotApiKey, ChatServer server) {
+		this.riotApiKey = riotApiKey;
 		this.server = server;
-		rateLimiters.add(new RateLimiter(10, 10_000));
-		rateLimiters.add(new RateLimiter(500, 600_000));
+		for(final RateLimiter rateLimiter : riotApiKey.getRateLimit().limiters){
+			rateLimiters.add(rateLimiter);
+		}
 	}
 
 	public String getName(String userId) throws IOException {
@@ -74,7 +75,7 @@ public class RiotApi {
 				"");
 		final String response = request("https://" + server.api + "/api/lol/"
 				+ server + "/v1.4/summoner/" + summonerId + "/name?api_key="
-				+ apiKey);
+				+ riotApiKey.getKey());
 		final Map<String, String> summoner = new GsonBuilder().create()
 				.fromJson(response, new TypeToken<Map<String, String>>() {
 				}.getType());
@@ -84,7 +85,7 @@ public class RiotApi {
 	public long getSummonerId(String name) throws IOException,
 			URISyntaxException {
 		final URI uri = new URI("https", server.api, "/api/lol/" + server
-				+ "/v1.4/summoner/by-name/" + name, "api_key=" + apiKey, null);
+				+ "/v1.4/summoner/by-name/" + name, "api_key=" + riotApiKey.getKey(), null);
 		final String response = request(uri.toASCIIString());
 		final Map<String, SummonerDto> summoner = new GsonBuilder().create()
 				.fromJson(response, new TypeToken<Map<String, SummonerDto>>() {

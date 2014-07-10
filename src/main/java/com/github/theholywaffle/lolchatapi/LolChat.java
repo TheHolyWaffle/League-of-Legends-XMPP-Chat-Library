@@ -59,6 +59,7 @@ import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
 import com.github.theholywaffle.lolchatapi.riotapi.RiotApi;
+import com.github.theholywaffle.lolchatapi.riotapi.RiotApiKey;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend;
 import com.github.theholywaffle.lolchatapi.wrapper.Friend.FriendStatus;
 import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
@@ -114,7 +115,7 @@ public class LolChat {
 	 *            The chatserver of the region you want to connect to
 	 * @param friendRequestPolicy
 	 *            Determines how new Friend requests are treated.
-	 * @param apiKey
+	 * @param riotApiKey
 	 *            Your apiKey used to convert summonerId's to name. You can get
 	 *            your key here <a
 	 *            href="https://developer.riotgames.com/">developer
@@ -124,10 +125,10 @@ public class LolChat {
 	 * @see LolChat#setFriendRequestListener(FriendRequestListener)
 	 */
 	public LolChat(ChatServer server, FriendRequestPolicy friendRequestPolicy,
-			String apiKey) {
+			RiotApiKey riotApiKey) {
 		this.friendRequestPolicy = friendRequestPolicy;
-		if (apiKey != null && server.api != null) {
-			this.riotApi = RiotApi.build(apiKey, server);
+		if (riotApiKey != null && server.api != null) {
+			this.riotApi = RiotApi.build(riotApiKey, server);
 		}
 		Roster.setDefaultSubscriptionMode(SubscriptionMode.manual);
 		final ConnectionConfiguration config = new ConnectionConfiguration(
