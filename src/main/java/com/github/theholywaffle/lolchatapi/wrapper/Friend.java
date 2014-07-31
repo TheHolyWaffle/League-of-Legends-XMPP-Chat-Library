@@ -177,8 +177,22 @@ public class Friend extends Wrapper<RosterEntry> {
 	 * @return The name of this Friend or null if no name is assigned.
 	 */
 	public String getName() {
+		return getName(false);
+	}
+
+	/**
+	 * Gets the name of this friend. If the name was null then we try to fetch
+	 * the name with your Riot API Key if provided. Enable forcedUpdate to
+	 * always fetch the latest name of this Friend even when the name is not
+	 * null.
+	 * 
+	 * @param forcedUpdate
+	 *            True will force to update the name even when it is not null.
+	 * @return The name of this Friend or null if no name is assigned.
+	 */
+	public String getName(boolean forcedUpdate) {
 		String name = get().getName();
-		if (name == null && api.getRiotApi() != null) {
+		if ((name == null || forcedUpdate) && api.getRiotApi() != null) {
 			try {
 				name = api.getRiotApi().getName(getUserId());
 				setName(name);
