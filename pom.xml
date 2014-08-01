@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.theholywaffle</groupId>
 	<artifactId>lolchatapi</artifactId>
-	<version>1.1.5</version>
+	<version>1.1.6</version>
 
 	<issueManagement>
 		<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/issues</url>
@@ -43,6 +43,23 @@
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<shadedArtifactAttached>true</shadedArtifactAttached>
+							<shadedClassifierName>with-dependencies</shadedClassifierName>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
