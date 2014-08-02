@@ -14,15 +14,15 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 ## Getting Started
 
-**Download**
+### Download
 
-- Standalone Jar: 
-Find the latest release [here](https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/tree/mvn-repo/com/github/theholywaffle/lolchatapi). Download the `lolchatapi-<version>-with-dependencies.jar` and add it to the buildpath of your project. 
+- **Option 1 (Standalone Jar)**: 
 
-OR
+   Download the latest release [here](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/download.html) and add it to the buildpath of your project. 
 
-- Maven: 
-Add the following to your pom.xml
+- **Option 2 (Maven)**: 
+
+   Add the following to your pom.xml
 
 ```xml
 <project>	
@@ -49,14 +49,18 @@ Add the following to your pom.xml
 	</dependencies>
 
 </project>
-```
+ ```
+
+
+### Usage
+
 * To use this api you have to create a [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/main/java/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
 * Do what you want with this [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object (see examples).
 
-**Example**
+### Example
 
 ```java
-final LolChat api = new LolChat(ChatServer.EUW, FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY",RateLimit.DEFAULT));
+final LolChat api = new LolChat(ChatServer.EUW, FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY", RateLimit.DEFAULT));
 if (api.login("myusername", "mypassword")) {
 
 	// Example 1: Send Chat Message to all your friends
@@ -85,23 +89,13 @@ if (api.login("myusername", "mypassword")) {
 }
 ```
 
-**More examples**
+### More examples
 
 [here](example)
 
-**Latest Javadocs**
+### Javadocs
 
 [here](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/latest/)
-
-## Dependencies
-
-* `smack-core-4.0.0.jar`
-* `smack-extensions-4.0.0.jar`
-* `smack-tcp-4.0.0.jar`
-* `xpp3-1.1.4c.jar`
-* `jdom2-2.0.5.jar`
-* `xmlunit-1.5.jar`
-* `gson-2.2.4.jar`
 
 ## Questions or bugs?
 
