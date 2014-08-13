@@ -18,7 +18,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 - **Option 1 (Standalone Jar)**: 
 
-   Download the latest release <a href="http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/download.html" target="_blank">here</a> and add it to the buildpath of your project. 
+   Download the <a href="http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/download.html" target="_blank">latest release</a> and add it to the buildpath of your project. 
 
 - **Option 2 (Maven)**: 
 
