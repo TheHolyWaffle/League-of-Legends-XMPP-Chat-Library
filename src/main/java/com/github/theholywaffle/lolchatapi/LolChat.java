@@ -630,6 +630,15 @@ public class LolChat {
 	}
 
 	/**
+	 * Returns true if currently connected to the XMPP server.
+	 * 
+	 * @return True if connected
+	 */
+	public boolean isConnected() {
+		return connection.isConnected();
+	}
+
+	/**
 	 * Returns true if server has sent us all information after logging in.
 	 * 
 	 * @return True if server has sent us all information after logging in,
