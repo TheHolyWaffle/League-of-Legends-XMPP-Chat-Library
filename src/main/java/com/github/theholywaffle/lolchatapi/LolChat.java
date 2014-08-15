@@ -56,6 +56,7 @@ import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.spark.util.DummySSLSocketFactory;
 
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
+import com.github.theholywaffle.lolchatapi.listeners.ConnectionListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendListener;
 import com.github.theholywaffle.lolchatapi.listeners.FriendRequestListener;
 import com.github.theholywaffle.lolchatapi.riotapi.RiotApi;
@@ -67,8 +68,10 @@ import com.github.theholywaffle.lolchatapi.wrapper.FriendGroup;
 public class LolChat {
 
 	private final XMPPConnection connection;
-	private final ArrayList<ChatListener> chatListeners = new ArrayList<>();
-	private final ArrayList<FriendListener> friendListeners = new ArrayList<>();
+	private final List<ChatListener> chatListeners = new ArrayList<>();
+	private final List<FriendListener> friendListeners = new ArrayList<>();
+	private final List<ConnectionListener> connectionListeners = new ArrayList<>();
+
 	private boolean stop = false;
 
 	private String status = "";
@@ -163,10 +166,21 @@ public class LolChat {
 	 * Adds a ChatListener that listens to messages from all your friends.
 	 * 
 	 * @param chatListener
-	 *            The ChatListener that you want to add
+	 *            The ChatListener
 	 */
 	public void addChatListener(ChatListener chatListener) {
 		chatListeners.add(chatListener);
+	}
+
+	/**
+	 * Adds a ConnectionListener that listens to connections, disconnections and
+	 * reconnections.
+	 * 
+	 * @param conListener
+	 *            The ConnectionListener
+	 */
+	public void addConnectionListener(ConnectionListener conListener) {
+		connectionListeners.add(conListener);
 	}
 
 	/**
@@ -308,6 +322,48 @@ public class LolChat {
 	}
 
 	private void addListeners() {
+		connection
+				.addConnectionListener(new org.jivesoftware.smack.ConnectionListener() {
+
+					public void reconnectionSuccessful() {
+						updateStatus();
+						for (final ConnectionListener l : connectionListeners) {
+							l.reconnectionSuccessful();
+						}
+					}
+
+					public void connectionClosed() {
+						for (final ConnectionListener l : connectionListeners) {
+							l.connectionClosed();
+						}
+					}
+
+					public void connectionClosedOnError(Exception e) {
+						for (final ConnectionListener l : connectionListeners) {
+							l.connectionClosedOnError(e);
+						}
+					}
+
+					public void reconnectingIn(int seconds) {
+						for (final ConnectionListener l : connectionListeners) {
+							l.reconnectingIn(seconds);
+						}
+					}
+
+					public void reconnectionFailed(Exception e) {
+						for (final ConnectionListener l : connectionListeners) {
+							l.reconnectionFailed(e);
+						}
+					}
+
+					public void connected(XMPPConnection connection) {
+						// do nothing
+					}
+
+					public void authenticated(XMPPConnection connection) {
+						// do nothing
+					}
+				});
 		connection.getRoster().addRosterListener(
 				leagueRosterListener = new LeagueRosterListener(this,
 						connection));
@@ -657,6 +713,17 @@ public class LolChat {
 	 */
 	public void removeChatListener(ChatListener chatListener) {
 		chatListeners.remove(chatListener);
+	}
+
+	/**
+	 * Removes the ConnectionListener from the list and will no longer be
+	 * called.
+	 * 
+	 * @param conListener
+	 *            The ConnectionListener that you want to remove
+	 */
+	public void removeConnectionListener(ConnectionListener conListener) {
+		connectionListeners.remove(conListener);
 	}
 
 	/**

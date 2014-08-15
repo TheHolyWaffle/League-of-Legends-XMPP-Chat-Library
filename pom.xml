@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.theholywaffle</groupId>
 	<artifactId>lolchatapi</artifactId>
-	<version>1.1.7</version>
+	<version>1.1.8</version>
 
 	<issueManagement>
 		<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/issues</url>
@@ -252,17 +252,17 @@
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smack-core</artifactId>
-			<version>4.0.0</version>
+			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smack-extensions</artifactId>
-			<version>4.0.0</version>
+			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.igniterealtime.smack</groupId>
 			<artifactId>smack-tcp</artifactId>
-			<version>4.0.0</version>
+			<version>4.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jdom</groupId>
