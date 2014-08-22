@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.theholywaffle</groupId>
 	<artifactId>lolchatapi</artifactId>
-	<version>1.1.9</version>
+	<version>1.1.10</version>
 
 	<issueManagement>
 		<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/issues</url>
@@ -78,10 +78,6 @@
 							<inceptionYear>2014</inceptionYear>
 							<organizationName>Bert De Geyter</organizationName>
 							<projectName>League of Legends XMPP Chat Library</projectName>
-							<excludes>
-								<!-- <exclude>**/com/github/theholywaffle/lolchatapi/example/*</exclude> -->
-								<exclude>**/org/jivesoftware/spark/util/*</exclude>
-							</excludes>
 						</configuration>
 					</execution>
 				</executions>

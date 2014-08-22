@@ -31,6 +31,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.SSLSocketFactory;
+
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
@@ -53,7 +55,6 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.util.StringUtils;
-import org.jivesoftware.spark.util.DummySSLSocketFactory;
 
 import com.github.theholywaffle.lolchatapi.listeners.ChatListener;
 import com.github.theholywaffle.lolchatapi.listeners.ConnectionListener;
@@ -75,8 +76,9 @@ public class LolChat {
 	private boolean stop = false;
 
 	private String status = "";
-	private Presence.Type type = Presence.Type.available;
+	private final Presence.Type type = Presence.Type.available;
 	private Presence.Mode mode = Presence.Mode.chat;
+	private boolean invisible = false;
 	private LeagueRosterListener leagueRosterListener;
 	private LeaguePacketListener leaguePacketListener;
 	private FriendRequestPolicy friendRequestPolicy;
@@ -137,7 +139,7 @@ public class LolChat {
 		final ConnectionConfiguration config = new ConnectionConfiguration(
 				server.host, 5223, "pvp.net");
 		config.setSecurityMode(ConnectionConfiguration.SecurityMode.enabled);
-		config.setSocketFactory(new DummySSLSocketFactory());
+		config.setSocketFactory(SSLSocketFactory.getDefault());
 		config.setCompressionEnabled(true);
 		connection = new XMPPTCPConnection(config);
 
@@ -785,16 +787,16 @@ public class LolChat {
 	 * 
 	 */
 	public void setOffline() {
-		this.type = Presence.Type.unavailable;
+		invisible = true;
 		updateStatus();
-	}
+	} 
 
 	/**
 	 * Change your appearance to online.
 	 * 
 	 */
 	public void setOnline() {
-		this.type = Presence.Type.available;
+		invisible = false;
 		updateStatus();
 	}
 
@@ -815,7 +817,8 @@ public class LolChat {
 	}
 
 	private void updateStatus() {
-		final Presence newPresence = new Presence(type, status, 1, mode);
+		final CustomPresence newPresence = new CustomPresence(type, status, 1, mode);
+		newPresence.setInvisible(invisible);
 		try {
 			connection.sendPacket(newPresence);
 		} catch (final NotConnectedException e) {
