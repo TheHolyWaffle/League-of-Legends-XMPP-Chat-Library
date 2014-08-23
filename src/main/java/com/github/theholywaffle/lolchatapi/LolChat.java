@@ -146,22 +146,23 @@ public class LolChat {
 		try {
 			connection.connect();
 		} catch (XMPPException | SmackException | IOException e) {
-			System.err.println("Failed to connect to " + server.host);
-			return;
+			System.err.println("Failed to connect to \"" + server.host+"\"");
 		}
 		addListeners();
-		new Thread(new Runnable() {
+		if (connection.isConnected()) {
+			new Thread(new Runnable() {
 
-			@Override
-			public void run() {
-				while (!stop) {
-					try {
-						Thread.sleep(500);
-					} catch (final InterruptedException ignored) {
+				@Override
+				public void run() {
+					while (!stop) {
+						try {
+							Thread.sleep(500);
+						} catch (final InterruptedException ignored) {
+						}
 					}
 				}
-			}
-		}).start();
+			}).start();
+		}
 	}
 
 	/**
@@ -789,7 +790,7 @@ public class LolChat {
 	public void setOffline() {
 		invisible = true;
 		updateStatus();
-	} 
+	}
 
 	/**
 	 * Change your appearance to online.
@@ -817,7 +818,8 @@ public class LolChat {
 	}
 
 	private void updateStatus() {
-		final CustomPresence newPresence = new CustomPresence(type, status, 1, mode);
+		final CustomPresence newPresence = new CustomPresence(type, status, 1,
+				mode);
 		newPresence.setInvisible(invisible);
 		try {
 			connection.sendPacket(newPresence);
