@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.theholywaffle</groupId>
 	<artifactId>lolchatapi</artifactId>
-	<version>1.1.11</version>
+	<version>1.1.12</version>
 
 	<issueManagement>
 		<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/issues</url>

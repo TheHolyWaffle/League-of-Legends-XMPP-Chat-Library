@@ -39,7 +39,7 @@ public enum ChatServer {
 	/**
 	 * Europe Nordic and East
 	 */
-	EUNE("chat.eun1.riotgames.com", "eune.api.pvp.net"),
+	EUNE("chat.eun1.lol.riotgames.com", "eune.api.pvp.net"),
 	/**
 	 * Europe West
 	 */
