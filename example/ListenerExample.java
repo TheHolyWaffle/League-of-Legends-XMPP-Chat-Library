@@ -15,7 +15,8 @@ public class ListenerExample {
 
 	public ListenerExample() {
 		final LolChat api = new LolChat(ChatServer.EUW,
-				FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY",RateLimit.DEFAULT));
+				FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY",
+						RateLimit.DEFAULT));
 		/** First add or set all listeners BEFORE logging in! */
 
 		// Example 1: Adding FriendListeners - listens to changes in your
@@ -52,8 +53,8 @@ public class ListenerExample {
 				System.out.println("New friend: " + friend.getUserId());
 			}
 
-			public void onRemoveFriend(String userId) {
-				System.out.println("Friend removed: " + userId);
+			public void onRemoveFriend(String userId, String name) {
+				System.out.println("Friend removed: " + userId + " " + name);
 			}
 		});
 

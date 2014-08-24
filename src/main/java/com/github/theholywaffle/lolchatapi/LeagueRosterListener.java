@@ -79,11 +79,19 @@ public class LeagueRosterListener implements RosterListener {
 		added = true;
 	}
 
-	public void entriesDeleted(Collection<String> e) {
-		for (final String s : e) {
+	public void entriesDeleted(Collection<String> entries) {
+		for (final String s : entries) {
 			friendStatusUsers.put(s, null);
 			for (final FriendListener l : api.getFriendListeners()) {
-				l.onRemoveFriend(s);
+				String name = null;
+				if (api.getRiotApi() != null) {
+					try {
+						name = api.getRiotApi().getName(s);
+					} catch (final IOException e) {
+						e.printStackTrace();
+					}
+				}
+				l.onRemoveFriend(s, name);
 			}
 		}
 	}

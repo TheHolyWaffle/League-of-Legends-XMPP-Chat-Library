@@ -98,7 +98,10 @@ public interface FriendListener {
 	 * @param userId
 	 *            The XMPP-address of the user who deleted you or declined your
 	 *            friend request (e.g. sum12345678@pvp.net).
+	 * @param name
+	 *            The name of the user who deleted you. An Riot API Key is
+	 *            needed otherwise name is null.
 	 */
-	public void onRemoveFriend(String userId);
+	public void onRemoveFriend(String userId, String name);
 
 }
