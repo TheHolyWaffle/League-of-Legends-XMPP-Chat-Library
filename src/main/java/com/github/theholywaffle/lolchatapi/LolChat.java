@@ -84,6 +84,7 @@ public class LolChat {
 	private FriendRequestPolicy friendRequestPolicy;
 	private boolean loaded;
 	private RiotApi riotApi;
+	private final ChatServer server;
 
 	/**
 	 * Represents a single connection to a League of Legends chatserver. Default
@@ -132,6 +133,7 @@ public class LolChat {
 	public LolChat(ChatServer server, FriendRequestPolicy friendRequestPolicy,
 			RiotApiKey riotApiKey) {
 		this.friendRequestPolicy = friendRequestPolicy;
+		this.server=server;
 		if (riotApiKey != null && server.api != null) {
 			this.riotApi = RiotApi.build(riotApiKey, server);
 		}
@@ -142,27 +144,8 @@ public class LolChat {
 		config.setSocketFactory(SSLSocketFactory.getDefault());
 		config.setCompressionEnabled(true);
 		connection = new XMPPTCPConnection(config);
-
-		try {
-			connection.connect();
-		} catch (XMPPException | SmackException | IOException e) {
-			System.err.println("Failed to connect to \"" + server.host+"\"");
-		}
+		
 		addListeners();
-		if (connection.isConnected()) {
-			new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					while (!stop) {
-						try {
-							Thread.sleep(500);
-						} catch (final InterruptedException ignored) {
-						}
-					}
-				}
-			}).start();
-		}
 	}
 
 	/**
@@ -677,10 +660,12 @@ public class LolChat {
 	}
 
 	/**
-	 * Logs in to the chat server. This call is asynchronous.
+	 * Connects to the server and logs you in. If the server is unavailable then
+	 * it will retry after a certain time period. It will not return unless the
+	 * connection is successful.
 	 * 
-	 * BEWARE: add/set all listeners before logging in, otherwise some offline
-	 * messages can get lost.
+	 * BEWARE: add/set all listeners before logging in, otherwise some packets
+	 * can get lost.
 	 * 
 	 * @param username
 	 *            Username of your account
@@ -693,6 +678,21 @@ public class LolChat {
 	 * @return true if login was succesful, false otherwise
 	 */
 	public boolean login(String username, String password, boolean replaceLeague) {
+		int attempt = 0;
+		while (!connection.isConnected()) {
+			if (attempt > 0) {
+				try {
+					Thread.sleep(attempt * 10_000);
+				} catch (final InterruptedException e) {
+				}
+			}
+			try {
+				connection.connect();
+			} catch (SmackException | IOException | XMPPException e) {
+				System.err.println("Failed to connect to \"" + server.host + "\"");
+			}
+			attempt++;
+		}
 		try {
 			if (replaceLeague) {
 				connection.login(username, "AIR_" + password, "xiff");
@@ -703,6 +703,18 @@ public class LolChat {
 		} catch (XMPPException | SmackException | IOException e) {
 		}
 		if (connection.isAuthenticated()) {
+			new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					while (!stop) {
+						try {
+							Thread.sleep(500);
+						} catch (final InterruptedException ignored) {
+						}
+					}
+				}
+			}).start();
 			final long startTime = System.currentTimeMillis();
 			while (!leagueRosterListener.isLoaded()
 					&& (System.currentTimeMillis() - startTime) < 1000) {
