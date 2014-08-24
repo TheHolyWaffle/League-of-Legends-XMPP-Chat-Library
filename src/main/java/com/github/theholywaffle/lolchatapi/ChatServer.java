@@ -45,6 +45,10 @@ public enum ChatServer {
 	 */
 	EUW("chat.euw1.lol.riotgames.com", "euw.api.pvp.net"),
 	/**
+	 * Indonesia
+	 */
+	ID("chatid.lol.garenanow.com", null),
+	/**
 	 * Korea
 	 */
 	KR("chat.kr.lol.riotgames.com", "kr.api.pvp.net"),
@@ -77,6 +81,10 @@ public enum ChatServer {
 	 */
 	RU("chat.ru.lol.riotgames.com", "ru.api.pvp.net"),
 	/**
+	 * South-East Asia
+	 */
+	SEA("chat.lol.garenanow.com", null),
+	/**
 	 * Thailand
 	 */
 	TH("chatth.lol.garenanow.com", null),
@@ -93,8 +101,8 @@ public enum ChatServer {
 	 */
 	VN("chatvn.lol.garenanow.com", null);
 
-	public String host;
 	public String api;
+	public String host;
 
 	ChatServer(String host, String api) {
 		this.host = host;

@@ -133,7 +133,7 @@ public class LolChat {
 	public LolChat(ChatServer server, FriendRequestPolicy friendRequestPolicy,
 			RiotApiKey riotApiKey) {
 		this.friendRequestPolicy = friendRequestPolicy;
-		this.server=server;
+		this.server = server;
 		if (riotApiKey != null && server.api != null) {
 			this.riotApi = RiotApi.build(riotApiKey, server);
 		}
@@ -144,7 +144,7 @@ public class LolChat {
 		config.setSocketFactory(SSLSocketFactory.getDefault());
 		config.setCompressionEnabled(true);
 		connection = new XMPPTCPConnection(config);
-		
+
 		addListeners();
 	}
 
@@ -686,12 +686,14 @@ public class LolChat {
 				} catch (final InterruptedException e) {
 				}
 			}
+			attempt++;
 			try {
 				connection.connect();
 			} catch (SmackException | IOException | XMPPException e) {
-				System.err.println("Failed to connect to \"" + server.host + "\"");
+				System.err.println("Failed to connect to \"" + server.host
+						+ "\". Retrying in " + (attempt * 10) + " seconds.");
 			}
-			attempt++;
+
 		}
 		try {
 			if (replaceLeague) {
