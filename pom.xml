@@ -29,7 +29,7 @@
 	</licenses>
 
 	<scm>
-		<url>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</url>
+		<url>git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</url>
 		<connection>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</connection>
 		<developerConnection>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</developerConnection>
 	</scm>
@@ -280,7 +280,8 @@
 
 	<name>League of Legends XMPP Chat Library</name>
 	<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library</url>
-	<description>A Java 7 XMPP API to chat and interact with the League of Legends ChatServers.</description>
+	<description>A Java 7 XMPP API to chat and interact with the League of Legends ChatServers.</description>	
+	<packaging>jar</packaging>
 
 	<distributionManagement>
 		<repository>
