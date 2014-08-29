@@ -75,10 +75,11 @@ public class LolChat {
 
 	private boolean stop = false;
 
-	private String status = "";
+	private LolStatus status = new LolStatus();
 	private final Presence.Type type = Presence.Type.available;
 	private Presence.Mode mode = Presence.Mode.chat;
 	private boolean invisible = false;
+	private String name = null;
 	private LeagueRosterListener leagueRosterListener;
 	private LeaguePacketListener leaguePacketListener;
 	private FriendRequestPolicy friendRequestPolicy;
@@ -311,11 +312,12 @@ public class LolChat {
 		connection
 				.addConnectionListener(new org.jivesoftware.smack.ConnectionListener() {
 
-					public void reconnectionSuccessful() {
-						updateStatus();
-						for (final ConnectionListener l : connectionListeners) {
-							l.reconnectionSuccessful();
-						}
+					public void authenticated(XMPPConnection connection) {
+						// do nothing
+					}
+
+					public void connected(XMPPConnection connection) {
+						// do nothing
 					}
 
 					public void connectionClosed() {
@@ -342,12 +344,11 @@ public class LolChat {
 						}
 					}
 
-					public void connected(XMPPConnection connection) {
-						// do nothing
-					}
-
-					public void authenticated(XMPPConnection connection) {
-						// do nothing
+					public void reconnectionSuccessful() {
+						updateStatus();
+						for (final ConnectionListener l : connectionListeners) {
+							l.reconnectionSuccessful();
+						}
 					}
 				});
 		connection.getRoster().addRosterListener(
@@ -561,6 +562,35 @@ public class LolChat {
 	}
 
 	/**
+	 * Gets the LolStatus of the user that is logged in.
+	 * 
+	 * @return The current LolStatus.
+	 * @see LolChat#setStatus(LolStatus)
+	 */
+	public LolStatus getLolStatus() {
+		return status;
+	}
+
+	/**
+	 * Gets the name of the user that is logged in. An Riot API key has to be
+	 * provided.
+	 * 
+	 * @param forcedUpdate
+	 *            True will force to update the name even when it is not null.
+	 * @return The name of this user or null if something went wrong.
+	 */
+	public String getName(boolean forcedUpdate) {
+		if ((name == null || forcedUpdate) && getRiotApi() != null) {
+			try {
+				name = getRiotApi().getName(connection.getUser());
+			} catch (final IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return name;
+	}
+
+	/**
 	 * Get all your friends who are offline.
 	 * 
 	 * @return A list of all your offline Friends
@@ -637,7 +667,7 @@ public class LolChat {
 	/**
 	 * Returns true if your appearance is set to online, otherwise false.
 	 * 
-	 * @return True if your appearance is set to online, otherwise false.
+	 * @return True if your appearance is set to online, false if set to offline.
 	 */
 	public boolean isOnline() {
 		return type == Presence.Type.available;
@@ -827,13 +857,13 @@ public class LolChat {
 	 * @see LolStatus
 	 */
 	public void setStatus(LolStatus status) {
-		this.status = status.toString();
+		this.status = status;
 		updateStatus();
 	}
 
 	private void updateStatus() {
-		final CustomPresence newPresence = new CustomPresence(type, status, 1,
-				mode);
+		final CustomPresence newPresence = new CustomPresence(type,
+				status.toString(), 1, mode);
 		newPresence.setInvisible(invisible);
 		try {
 			connection.sendPacket(newPresence);
