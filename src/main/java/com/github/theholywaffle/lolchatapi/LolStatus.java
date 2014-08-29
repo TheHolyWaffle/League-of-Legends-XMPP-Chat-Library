@@ -128,7 +128,8 @@ public class LolStatus {
 		odinWins,
 		wins,
 		gameStatus,
-		isObservable;
+		isObservable,
+		mobile;
 
 		@Override
 		public String toString() {
@@ -519,6 +520,15 @@ public class LolStatus {
 	public LolStatus setTimestamp(long date) {
 		setElement(XMLProperty.timeStamp, date);
 		return this;
+	}
+
+	public LolStatus setMobile(String mobile) {
+		setElement(XMLProperty.mobile, mobile);
+		return this;
+	}
+
+	public String getMobile() {
+		return get(XMLProperty.mobile);
 	}
 
 	@Override
