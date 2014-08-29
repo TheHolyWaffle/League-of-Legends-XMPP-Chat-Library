@@ -667,7 +667,8 @@ public class LolChat {
 	/**
 	 * Returns true if your appearance is set to online, otherwise false.
 	 * 
-	 * @return True if your appearance is set to online, false if set to offline.
+	 * @return True if your appearance is set to online, false if set to
+	 *         offline.
 	 */
 	public boolean isOnline() {
 		return type == Presence.Type.available;

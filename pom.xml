@@ -5,26 +5,41 @@
 	<groupId>com.github.theholywaffle</groupId>
 	<artifactId>lolchatapi</artifactId>
 	<version>1.2.4</version>
+	<packaging>jar</packaging>
+
+	<name>League of Legends XMPP Chat Library</name>
+	<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library</url>
+	<description>A Java 7 XMPP API to chat and interact with the League of Legends ChatServers.</description>
+
+	<developers>
+		<developer>
+			<email>degeyter.bert@gmail.com</email>
+			<name>Bert De Geyter</name>
+			<url>https://github.com/TheHolyWaffle</url>
+			<id>TheHolyWaffle</id>
+		</developer>
+	</developers>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<issueManagement>
 		<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 
-	<developers>
-		<developer>
-			<email>degeyter.bert@gmail.com</email>
-			<name>Bert De geyter</name>
-			<url>https://github.com/TheHolyWaffle</url>
-			<id>TheHolyWaffle</id>
-		</developer>
-	</developers>
-
 	<licenses>
 		<license>
 			<name>MIT</name>
 			<url>http://opensource.org/licenses/MIT</url>
-			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
@@ -34,8 +49,26 @@
 		<developerConnection>scm:git:git@github.com:TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.git</developerConnection>
 	</scm>
 
+	<properties>
+		<encoding>UTF-8</encoding>
+	</properties>
+
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.5</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -67,7 +100,6 @@
 				<version>1.7</version>
 				<executions>
 					<execution>
-						<id>first</id>
 						<goals>
 							<goal>update-file-header</goal>
 						</goals>
@@ -98,150 +130,32 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
 				<executions>
 					<execution>
-						<id>attach-javadocs1</id>
-						<configuration>
-							<quiet>true</quiet>
-							<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!-- com.github.theholywaffle.lolchatapi.example: -->
-							<show>public</show>
-							<outputDirectory>${project.build.directory}/apidocs/${project.version}</outputDirectory>
-						</configuration>
+						<id>attach-javadoc</id>
 						<goals>
 							<goal>jar</goal>
 						</goals>
-					</execution>
-					<execution>
-						<id>attach-javadocs2</id>
 						<configuration>
 							<quiet>true</quiet>
-							<excludePackageNames>org.jivesoftware.spark.util</excludePackageNames> <!-- com.github.theholywaffle.lolchatapi.example: -->
 							<show>public</show>
-							<outputDirectory>${project.build.directory}/apidocs/latest</outputDirectory>
 						</configuration>
-						<goals>
-							<goal>jar</goal>
-						</goals>
 					</execution>
 				</executions>
+				<version>2.9.1</version>
 			</plugin>
 			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.1</version>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.2</version>
+				<extensions>true</extensions>
 				<configuration>
-					<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+					<serverId>ossrh</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.9</version>
-				<executions>
-					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
-						'deploy' phase -->
-					<execution>
-						<id>execution1</id>
-						<configuration>
-							<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-							<merge>true</merge>
-							<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-							<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-							<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
-							<includes>
-								<include>**/*</include>
-							</includes>
-							<repositoryName>League-of-Legends-XMPP-Chat-Library</repositoryName>      <!-- github repo name -->
-							<repositoryOwner>TheHolyWaffle</repositoryOwner>    <!-- github username -->
-						</configuration>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>deploy</phase>
-					</execution>
-					<execution>
-						<id>execution2</id>
-						<configuration>
-							<message>Javadoc for ${project.version}</message>  <!-- git commit message -->
-							<merge>true</merge>
-							<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-							<outputDirectory>${project.build.directory}/apidocs</outputDirectory> <!-- matches distribution management repository url above -->
-							<branch>refs/heads/gh-pages</branch>                       <!-- remote branch name -->
-							<includes>
-								<include>**/*</include>
-							</includes>
-							<repositoryName>League-of-Legends-XMPP-Chat-Library</repositoryName>      <!-- github repo name -->
-							<repositoryOwner>TheHolyWaffle</repositoryOwner>    <!-- github username -->
-						</configuration>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
-				<executions>
-					<execution>
-						<id>copy-resources</id>
-						<!-- here the phase you need -->
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/apidocs</outputDirectory>
-							<resources>
-								<resource>
-									<directory>html</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											license-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.7,)
-										</versionRange>
-										<goals>
-											<goal>
-												update-file-header
-											</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
 	<dependencies>
@@ -275,25 +189,6 @@
 			<artifactId>gson</artifactId>
 			<version>2.2.4</version>
 		</dependency>
-
 	</dependencies>
 
-	<name>League of Legends XMPP Chat Library</name>
-	<url>https://github.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library</url>
-	<description>A Java 7 XMPP API to chat and interact with the League of Legends ChatServers.</description>	
-	<packaging>jar</packaging>
-
-	<distributionManagement>
-		<repository>
-			<id>internal.repo</id>
-			<name>Temporary Staging Repository</name>
-			<url>file://${project.build.directory}/mvn-repo</url>
-		</repository>
-	</distributionManagement>
-
-	<properties>
-		<!-- github server corresponds to entry in ~/.m2/settings.xml -->
-		<github.global.server>github</github.global.server>
-		<encoding>UTF-8</encoding>
-	</properties>
 </project>

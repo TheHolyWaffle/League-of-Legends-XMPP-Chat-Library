@@ -26,7 +26,6 @@ package com.github.theholywaffle.lolchatapi.riotapi;
  * #L%
  */
 
-
 public class RiotApiKey {
 
 	private final String key;

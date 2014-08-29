@@ -12,7 +12,8 @@ public class FriendRequestExample {
 
 	public FriendRequestExample() {
 		final LolChat api = new LolChat(ChatServer.EUW,
-				FriendRequestPolicy.MANUAL, new RiotApiKey("RIOT-API-KEY",RateLimit.DEFAULT));
+				FriendRequestPolicy.MANUAL, new RiotApiKey("RIOT-API-KEY",
+						RateLimit.DEFAULT));
 
 		// Add FriendRequestListener
 		api.setFriendRequestListener(new FriendRequestListener() {

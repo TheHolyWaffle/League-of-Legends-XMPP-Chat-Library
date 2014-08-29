@@ -26,7 +26,6 @@ package com.github.theholywaffle.lolchatapi;
  * #L%
  */
 
-
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smack.util.XmlStringBuilder;

@@ -14,7 +14,8 @@ public class FriendGroupExample {
 
 	public FriendGroupExample() {
 		final LolChat api = new LolChat(ChatServer.EUW,
-				FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY",RateLimit.DEFAULT));
+				FriendRequestPolicy.ACCEPT_ALL, new RiotApiKey("RIOT-API-KEY",
+						RateLimit.DEFAULT));
 		if (api.login("myusername", "mypassword")) {
 
 			// Example 1: Print out all groups and all friends in those groups

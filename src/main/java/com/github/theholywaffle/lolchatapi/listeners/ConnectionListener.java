@@ -26,7 +26,6 @@ package com.github.theholywaffle.lolchatapi.listeners;
  * #L%
  */
 
-
 public interface ConnectionListener {
 
 	/**

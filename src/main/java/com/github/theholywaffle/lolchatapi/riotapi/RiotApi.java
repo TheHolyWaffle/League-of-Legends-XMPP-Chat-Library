@@ -58,6 +58,7 @@ public class RiotApi {
 		}
 		return api;
 	}
+
 	private final RiotApiKey riotApiKey;
 	private final ChatServer server;
 
@@ -66,7 +67,7 @@ public class RiotApi {
 	private RiotApi(RiotApiKey riotApiKey, ChatServer server) {
 		this.riotApiKey = riotApiKey;
 		this.server = server;
-		for(final RateLimiter rateLimiter : riotApiKey.getRateLimit().limiters){
+		for (final RateLimiter rateLimiter : riotApiKey.getRateLimit().limiters) {
 			rateLimiters.add(rateLimiter);
 		}
 	}
@@ -86,7 +87,8 @@ public class RiotApi {
 	public long getSummonerId(String name) throws IOException,
 			URISyntaxException {
 		final URI uri = new URI("https", server.api, "/api/lol/" + server
-				+ "/v1.4/summoner/by-name/" + name, "api_key=" + riotApiKey.getKey(), null);
+				+ "/v1.4/summoner/by-name/" + name, "api_key="
+				+ riotApiKey.getKey(), null);
 		final String response = request(uri.toASCIIString());
 		final Map<String, SummonerDto> summoner = new GsonBuilder().create()
 				.fromJson(response, new TypeToken<Map<String, SummonerDto>>() {

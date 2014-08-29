@@ -26,7 +26,6 @@ package com.github.theholywaffle.lolchatapi.riotapi;
  * #L%
  */
 
-
 public enum RateLimit {
 
 	/**
