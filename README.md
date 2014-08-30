@@ -1,11 +1,12 @@
 League of Legends XMPP Chat Library
 ===================================
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.theholywaffle/lolchatapi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.theholywaffle/lolchatapi) ![dependencies](https://www.versioneye.com/user/projects/5401aa7aeab62acbcb000056/badge.svg?style=flat)
 
 A Java 7 XMPP library to chat and interact with the League of Legends chatservers. Built upon [Smack](http://www.igniterealtime.org/projects/smack/) and [JDOM](http://www.jdom.org/).
 
 ## Features
 
-- [Documented source](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library)
+- [Documented source](http://www.javadoc.io/doc/com.github.theholywaffle/lolchatapi)
 - Event-based chat system
 - Automatic reconnecting
 - Managing of Friends and FriendGroups
@@ -18,44 +19,24 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 - **Option 1 (Standalone Jar)**: 
 
-   Download the <a href="http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/download.html" target="_blank">latest release</a> and add it to the buildpath of your project. 
+   Download the <a href="https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.github.theholywaffle&a=lolchatapi&v=LATEST&c=with-dependencies" target="_blank">latest release</a> and add it to the buildpath of your project. 
 
 - **Option 2 (Maven)**: 
-
-   Add the following to your pom.xml
-
 ```xml
-<project>	
-
-	<!-- other settings -->
-	
-	<repositories>
-		<repository>
-			<id>League-of-Legends-XMPP-Chat-Library-mvn-repo</id>
-			<url>https://raw.githubusercontent.com/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
-	
-	<dependencies>
-		<dependency>
-			<groupId>com.github.theholywaffle</groupId>
-			<artifactId>lolchatapi</artifactId>
-			<version>[1.0.0,2.0.0)</version>
-		</dependency>
-	</dependencies>
-
-</project>
+<dependency>
+  <groupId>com.github.theholywaffle</groupId>
+  <artifactId>lolchatapi</artifactId>
+  <version><!--latest version--></version>
+</dependency>
  ```
 
 
 ### Usage
 
-* To use this api you have to create a [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object first with the correct [ChatServer](src/main/java/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
-* Do what you want with this [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object (see examples).
+1. Create a [LolChat](src/main/java/com/github/theholywaffle/lolchatapi/LolChat.java) object with the correct [ChatServer](src/main/java/com/github/theholywaffle/lolchatapi/ChatServer.java) of your region.
+2. Add any listeners.
+3. Login.
+4. ...
 
 ### Example
 
@@ -89,13 +70,11 @@ if (api.login("myusername", "mypassword")) {
 }
 ```
 
-### More examples
-
-[here](example)
+[more examples](example)
 
 ### Javadocs
 
-[here](http://theholywaffle.github.io/League-of-Legends-XMPP-Chat-Library/latest/)
+[here](http://www.javadoc.io/doc/com.github.theholywaffle/lolchatapi)
 
 ## Questions or bugs?
 
