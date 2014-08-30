@@ -180,6 +180,7 @@ public class LolStatus {
 			}
 			if (!found) {
 				System.err.println("XMLProperty \"" + e.getName()
+						+ "\" value: \"" + e.getValue()
 						+ "\" not implemented yet!");
 			}
 		}
@@ -212,10 +213,6 @@ public class LolStatus {
 		return child.getValue();
 	}
 
-	// ///////////
-	// GETTERS //
-	// ///////////
-
 	public int getDominionLeaves() {
 		return getInt(XMLProperty.odinLeaves);
 	}
@@ -227,10 +224,6 @@ public class LolStatus {
 	private Element getElement(XMLProperty p) {
 		return doc.getRootElement().getChild(p.toString());
 	}
-
-	// ///////////
-	// SETTERS //
-	// ///////////
 
 	public String getFeaturedGameData() {
 		return get(XMLProperty.featuredGameData);
@@ -277,10 +270,6 @@ public class LolStatus {
 	public int getNormalLeaves() {
 		return getInt(XMLProperty.leaves);
 	}
-
-	// ///////////
-	// GETTERS //
-	// ///////////
 
 	public int getNormalWins() {
 		return getInt(XMLProperty.wins);
@@ -397,10 +386,6 @@ public class LolStatus {
 	private void setElement(XMLProperty p, long value) {
 		setElement(p, String.valueOf(value));
 	}
-
-	// ///////////
-	// SETTERS //
-	// ///////////
 
 	private void setElement(XMLProperty p, String value) {
 		getElement(p).setText(value);
