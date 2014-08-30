@@ -1,6 +1,6 @@
 League of Legends XMPP Chat Library
 ===================================
-[![Build Status](https://travis-ci.org/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.svg)](https://travis-ci.org/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.theholywaffle/lolchatapi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.theholywaffle/lolchatapi) ![dependencies](https://www.versioneye.com/user/projects/5401aa7aeab62acbcb000056/badge.svg?style=flat)
+[![Build Status](https://travis-ci.org/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.svg)](https://travis-ci.org/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.theholywaffle/lolchatapi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.theholywaffle/lolchatapi) [![Dependency Status](http://www.versioneye.com/user/projects/5401aa7aeab62acbcb000056/badge.png)](http://www.versioneye.com/user/projects/5401aa7aeab62acbcb000056)
 
 A Java 7 XMPP library to chat and interact with the League of Legends chatservers. Built upon [Smack](http://www.igniterealtime.org/projects/smack/) and [JDOM](http://www.jdom.org/).
 
