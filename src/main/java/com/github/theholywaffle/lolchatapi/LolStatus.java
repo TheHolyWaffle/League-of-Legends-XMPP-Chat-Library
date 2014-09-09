@@ -91,7 +91,8 @@ public class LolStatus {
 		SR_6x6,
 		CAP_5x5,
 		URF,
-		URF_BOT;
+		URF_BOT,
+		NIGHTMARE_BOT;
 	}
 
 	public enum Tier {
@@ -101,6 +102,7 @@ public class LolStatus {
 		GOLD,
 		PLATINUM,
 		DIAMOND,
+		MASTER,
 		CHALLENGER;
 	}
 
