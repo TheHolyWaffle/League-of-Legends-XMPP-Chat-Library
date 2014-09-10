@@ -131,7 +131,8 @@ public class LolStatus {
 		wins,
 		gameStatus,
 		isObservable,
-		mobile;
+		mobile,
+		rankedSoloRestricted;
 
 		@Override
 		public String toString() {
@@ -393,6 +394,10 @@ public class LolStatus {
 		getElement(p).setText(value);
 	}
 
+	private void setElement(XMLProperty p, boolean value) {
+		setElement(p, String.valueOf(value));
+	}
+
 	public LolStatus setFeaturedGameData(String data) {
 		setElement(XMLProperty.featuredGameData, data);
 		return this;
@@ -516,6 +521,15 @@ public class LolStatus {
 
 	public String getMobile() {
 		return get(XMLProperty.mobile);
+	}
+
+	public LolStatus setRankedSoloRestricted(boolean rankedSoloRestricted) {
+		setElement(XMLProperty.rankedSoloRestricted, rankedSoloRestricted);
+		return this;
+	}
+
+	public boolean getRankedSoloRestricted() {
+		return Boolean.valueOf(get(XMLProperty.rankedSoloRestricted));
 	}
 
 	@Override
