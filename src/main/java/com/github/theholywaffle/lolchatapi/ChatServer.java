@@ -26,6 +26,11 @@ package com.github.theholywaffle.lolchatapi;
  * #L%
  */
 
+import static com.github.theholywaffle.lolchatapi.ChatServer.LoginMethod.GARENA;
+import static com.github.theholywaffle.lolchatapi.ChatServer.LoginMethod.RIOT;
+
+import org.jivesoftware.smack.XMPPConnection;
+
 /**
  * Represents a regions chatserver.
  *
@@ -35,83 +40,102 @@ public enum ChatServer {
 	/**
 	 * Brazil
 	 */
-	BR("chat.br.lol.riotgames.com", "br.api.pvp.net"),
+	BR("chat.br.lol.riotgames.com", "br.api.pvp.net", RIOT),
 	/**
 	 * Europe Nordic and East
 	 */
-	EUNE("chat.eun1.lol.riotgames.com", "eune.api.pvp.net"),
+	EUNE("chat.eun1.lol.riotgames.com", "eune.api.pvp.net", RIOT),
 	/**
 	 * Europe West
 	 */
-	EUW("chat.euw1.lol.riotgames.com", "euw.api.pvp.net"),
+	EUW("chat.euw1.lol.riotgames.com", "euw.api.pvp.net", RIOT),
 	/**
 	 * Indonesia
 	 */
-	ID("chatid.lol.garenanow.com", null),
+	ID("chatid.lol.garenanow.com", null, GARENA),
 	/**
 	 * Korea
 	 */
-	KR("chat.kr.lol.riotgames.com", "kr.api.pvp.net"),
+	KR("chat.kr.lol.riotgames.com", "kr.api.pvp.net", RIOT),
 	/**
 	 * Latin America North
 	 */
-	LAN("chat.la1.lol.riotgames.com", "lan.api.pvp.net"),
+	LAN("chat.la1.lol.riotgames.com", "lan.api.pvp.net", RIOT),
 	/**
 	 * Latin America South
 	 */
-	LAS("chat.la2.lol.riotgames.com", "las.api.pvp.net"),
+	LAS("chat.la2.lol.riotgames.com", "las.api.pvp.net", RIOT),
 	/**
 	 * North-America
 	 */
-	NA("chat.na1.lol.riotgames.com", "na.api.pvp.net"),
+	NA("chat.na1.lol.riotgames.com", "na.api.pvp.net", RIOT),
 	/**
 	 * Oceania
 	 */
-	OCE("chat.oc1.lol.riotgames.com", "oce.api.pvp.net"),
+	OCE("chat.oc1.lol.riotgames.com", "oce.api.pvp.net", RIOT),
 	/**
 	 * Public Beta Environment
 	 */
-	PBE("chat.pbe1.lol.riotgames.com", null),
+	PBE("chat.pbe1.lol.riotgames.com", null, RIOT),
 	/**
 	 * Phillipines
 	 */
-	PH("chatph.lol.garenanow.com", null),
+	PH("chatph.lol.garenanow.com", null, GARENA),
 	/**
 	 * Russia
 	 */
-	RU("chat.ru.lol.riotgames.com", "ru.api.pvp.net"),
+	RU("chat.ru.lol.riotgames.com", "ru.api.pvp.net", RIOT),
 	/**
 	 * South-East Asia
 	 */
-	SEA("chat.lol.garenanow.com", null),
+	SEA("chat.lol.garenanow.com", null, GARENA),
 	/**
 	 * Thailand
 	 */
-	TH("chatth.lol.garenanow.com", null),
+	TH("chatth.lol.garenanow.com", null, GARENA),
 	/**
 	 * Turkey
 	 */
-	TR("chat.tr.lol.riotgames.com", "tr.api.pvp.net"),
+	TR("chat.tr.lol.riotgames.com", "tr.api.pvp.net", RIOT),
 	/**
 	 * Taiwan
 	 */
-	TW("chattw.lol.garenanow.com", null),
+	TW("chattw.lol.garenanow.com", null, GARENA),
 	/**
 	 * Vietnam
 	 */
-	VN("chatvn.lol.garenanow.com", null);
+	VN("chatvn.lol.garenanow.com", null, GARENA);
 
 	public String api;
 	public String host;
+	public LoginMethod loginMethod;
 
-	ChatServer(String host, String api) {
+	ChatServer(String host, String api, LoginMethod loginMethod) {
 		this.host = host;
 		this.api = api;
+		this.loginMethod = loginMethod;
 	}
 
 	@Override
 	public String toString() {
 		return name().toLowerCase();
+	}
+
+	public enum LoginMethod {
+
+		GARENA(new GarenaLogin()),
+		RIOT(new RiotLogin());
+
+		public ILoginMethod method;
+
+		LoginMethod(ILoginMethod method) {
+			this.method = method;
+		}
+
+		public void login(XMPPConnection connection, String username,
+				String password, boolean replaceLeague) {
+			method.login(connection, username, password, replaceLeague);
+		}
 	}
 
 }

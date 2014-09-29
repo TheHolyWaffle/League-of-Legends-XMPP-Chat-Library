@@ -41,7 +41,7 @@ public class Wrapper<E> {
 		this.object = object;
 		this.api = api;
 		if (object == null) {
-			System.err.println("Object " + object + " is null");
+			System.err.println("Wrapper object is null");
 		}
 	}
 

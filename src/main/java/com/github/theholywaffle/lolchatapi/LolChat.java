@@ -487,7 +487,7 @@ public class LolChat {
 	 * sensitive! The FriendGroup will be created if it didn't exist yet.
 	 * 
 	 * @param name
-	 *            The name of your group
+	 *            The name of your group (case-sensitive)
 	 * @return The corresponding FriendGroup
 	 */
 	public FriendGroup getFriendGroupByName(String name) {
@@ -675,28 +675,42 @@ public class LolChat {
 	}
 
 	/**
+	 * <p>
 	 * Logs in to the chat server without replacing the official connection of
-	 * the League of Legends client. This call is asynchronous. BEWARE: add/set
-	 * all listeners before logging in, otherwise some offline messages can get
-	 * lost.
+	 * the League of Legends client.
+	 * </p>
+	 * 
+	 * <p>
+	 * Note: add/set all listeners before logging in, otherwise some offline
+	 * messages can get lost.<br>
+	 * Note: Garena servers use different credentials to log in.
+	 * {@link GarenaLogin}
+	 * </p>
 	 * 
 	 * @param username
 	 *            Username of your account
 	 * @param password
 	 *            Password of your account
 	 * @return true if login is successful, false otherwise
+	 * @see GarenaLogin Logging in on Garena servers
 	 */
 	public boolean login(String username, String password) {
 		return login(username, password, false);
 	}
 
 	/**
+	 * <p>
 	 * Connects to the server and logs you in. If the server is unavailable then
 	 * it will retry after a certain time period. It will not return unless the
 	 * connection is successful.
+	 * </p>
 	 * 
-	 * BEWARE: add/set all listeners before logging in, otherwise some packets
-	 * can get lost.
+	 * <p>
+	 * Note: add/set all listeners before logging in, otherwise some offline
+	 * messages can get lost.<br>
+	 * Note: Garena servers use different credentials to log in.
+	 * {@link GarenaLogin}
+	 * </p>
 	 * 
 	 * @param username
 	 *            Username of your account
@@ -707,9 +721,12 @@ public class LolChat {
 	 *            client. False allows you to have another connection open next
 	 *            to the official connection in the League of Legends client.
 	 * @return true if login was succesful, false otherwise
+	 * @see GarenaLogin Logging in on Garena servers
 	 */
 	public boolean login(String username, String password, boolean replaceLeague) {
 		int attempt = 0;
+
+		// Wait until connection is stable
 		while (!connection.isConnected()) {
 			if (attempt > 0) {
 				try {
@@ -726,15 +743,11 @@ public class LolChat {
 			}
 
 		}
-		try {
-			if (replaceLeague) {
-				connection.login(username, "AIR_" + password, "xiff");
-			} else {
-				connection.login(username, "AIR_" + password);
-			}
 
-		} catch (XMPPException | SmackException | IOException e) {
-		}
+		// Login
+		server.loginMethod.login(connection, username, password, replaceLeague);
+
+		// Wait for roster to be loaded
 		if (connection.isAuthenticated()) {
 			new Thread(new Runnable() {
 

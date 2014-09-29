@@ -81,4 +81,4 @@ if (api.login("myusername", "mypassword")) {
 Please let me know them [here](../../issues). I'll help you out as soon as I can.
 
 ___
-*“This product is not endorsed, certified or otherwise approved in any way by Riot Games, Inc. or any of its affiliates.”*
+*“League of Legends XMPP Chat Library isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.”*
