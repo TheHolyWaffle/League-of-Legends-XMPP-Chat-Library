@@ -763,7 +763,7 @@ public class LolChat {
 			}).start();
 			final long startTime = System.currentTimeMillis();
 			while (!leagueRosterListener.isLoaded()
-					&& (System.currentTimeMillis() - startTime) < 1000) {
+					&& (System.currentTimeMillis() - startTime) < 60_000) {
 				try {
 					Thread.sleep(50);
 				} catch (final InterruptedException e) {
