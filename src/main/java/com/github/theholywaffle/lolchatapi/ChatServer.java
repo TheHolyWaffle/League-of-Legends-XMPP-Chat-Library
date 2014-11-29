@@ -68,7 +68,11 @@ public enum ChatServer {
 	/**
 	 * North-America
 	 */
-	NA("chat.na1.lol.riotgames.com", "na.api.pvp.net", RIOT),
+	NA("chat.na1.lol.riotgames.com", "na.api.pvp.net", RIOT),	
+	/**
+	 * North-America #2
+	 */
+	NA2("chat.na2.lol.riotgames.com", "na.api.pvp.net", RIOT),
 	/**
 	 * Oceania
 	 */
