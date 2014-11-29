@@ -19,7 +19,7 @@ A Java 7 XMPP library to chat and interact with the League of Legends chatserver
 
 - **Option 1 (Standalone Jar)**: 
 
-   Download the <a href="https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&g=com.github.theholywaffle&a=lolchatapi&v=LATEST&c=with-dependencies" target="_blank">latest release</a> and add it to the buildpath of your project. 
+   Download the <a href="https://search.maven.org/remote_content?g=com.github.theholywaffle&a=lolchatapi&v=LATEST&c=with-dependencies" target="_blank">latest release</a> and add it to the buildpath of your project. 
 
 - **Option 2 (Maven)**: 
 ```xml
@@ -81,4 +81,4 @@ if (api.login("myusername", "mypassword")) {
 Please let me know them [here](../../issues). I'll help you out as soon as I can.
 
 ___
-*ìLeague of Legends XMPP Chat Library isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends © Riot Games, Inc.î*
+*‚ÄúLeague of Legends XMPP Chat Library isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games or anyone officially involved in producing or managing League of Legends. League of Legends and Riot Games are trademarks or registered trademarks of Riot Games, Inc. League of Legends ¬© Riot Games, Inc.‚Äù*
