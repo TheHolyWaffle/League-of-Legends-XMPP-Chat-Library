@@ -76,7 +76,7 @@ public class RiotApi {
 		final String summonerId = StringUtils.parseName(userId).replace("sum",
 				"");
 		final String response = request("https://" + server.api + "/api/lol/"
-				+ server + "/v1.4/summoner/" + summonerId + "/name?api_key="
+				+ server.getApiRegion() + "/v1.4/summoner/" + summonerId + "/name?api_key="
 				+ riotApiKey.getKey());
 		final Map<String, String> summoner = new GsonBuilder().create()
 				.fromJson(response, new TypeToken<Map<String, String>>() {
@@ -86,7 +86,7 @@ public class RiotApi {
 
 	public long getSummonerId(String name) throws IOException,
 			URISyntaxException {
-		final URI uri = new URI("https", server.api, "/api/lol/" + server
+		final URI uri = new URI("https", server.api, "/api/lol/" + server.getApiRegion()
 				+ "/v1.4/summoner/by-name/" + name, "api_key="
 				+ riotApiKey.getKey(), null);
 		final String response = request(uri.toASCIIString());

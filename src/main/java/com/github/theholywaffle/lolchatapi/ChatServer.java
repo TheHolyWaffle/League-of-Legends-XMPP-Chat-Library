@@ -120,6 +120,14 @@ public enum ChatServer {
 		this.loginMethod = loginMethod;
 	}
 
+	public String getApiRegion()
+	{
+		if (api == null)
+			throw new NullPointerException("Riot API is not supported for this region.");
+
+		return api.split("\\.")[0].toLowerCase();
+	}
+
 	@Override
 	public String toString() {
 		return name().toLowerCase();
