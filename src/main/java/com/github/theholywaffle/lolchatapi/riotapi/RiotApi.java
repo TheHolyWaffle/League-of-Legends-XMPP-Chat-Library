@@ -109,12 +109,6 @@ public class RiotApi {
 				.openConnection();
 		connection.setRequestMethod("GET");
 		connection.setInstanceFollowRedirects(false);
-//		connection.setRequestProperty("User-Agent", "Test User Agent");
-//		connection.setRequestProperty("Accept-Language", "en-US");
-//		connection.setRequestProperty("Accept-Charset", "ISO-8859-1,utf-8");
-
-		System.out.println(requestURL);
-//		System.out.println(connection.getRequestProperties());
 
 		if (connection.getResponseCode() != 200) {
 			throw new IOException("Response code is "
