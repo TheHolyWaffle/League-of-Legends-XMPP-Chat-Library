@@ -122,7 +122,7 @@ public class LeagueRosterListener implements RosterListener {
 	public void presenceChanged(Presence p) {
 		String from = p.getFrom();
 		if (from != null) {
-			p = connection.getRoster().getPresence(p.getFrom());
+			p = connection.getRoster().getPresence(from);
 			from = StringUtils.parseBareAddress(from);
 			final Friend friend = api.getFriendById(from);
 			if (friend != null) {
