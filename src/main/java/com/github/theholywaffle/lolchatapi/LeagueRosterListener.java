@@ -133,7 +133,11 @@ public class LeagueRosterListener implements RosterListener {
 						l.onFriendJoin(friend);
 					} else if (p.getType() == Presence.Type.unavailable
 							&& (previousType == null || previousType != Presence.Type.unavailable)) {
+					    statusUsers.remove(friend);
+					    typeUsers.remove(friend);
+					    modeUsers.remove(friend);
 						l.onFriendLeave(friend);
+						return;
 					}
 
 					final Presence.Mode previousMode = modeUsers.get(from);
