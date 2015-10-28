@@ -132,7 +132,8 @@ public class LolStatus {
 		gameStatus,
 		isObservable,
 		mobile,
-		rankedSoloRestricted;
+		rankedSoloRestricted,
+		championMasteryScore;
 
 		@Override
 		public String toString() {
@@ -251,9 +252,19 @@ public class LolStatus {
 	}
 
 	private int getInt(XMLProperty p) {
+		return getInt(p, -1);
+	}
+	
+	/**
+	 * If the value exists it returns its value else the default value
+	 * @param p the {@link XMLProperty}
+	 * @param defaultValue the fallback value
+	 * @return returns the value of the given {@link XMLProperty}
+	 */
+	private int getInt(XMLProperty p, int defaultValue) {
 		final String value = get(p);
 		if (value.isEmpty()) {
-			return -1;
+			return defaultValue;
 		}
 		return Integer.parseInt(value);
 	}
@@ -532,6 +543,10 @@ public class LolStatus {
 		return Boolean.valueOf(get(XMLProperty.rankedSoloRestricted));
 	}
 
+	public int getChampionMasteryScore() {
+		return getInt(XMLProperty.championMasteryScore, 0);
+	}
+	
 	@Override
 	public String toString() {
 		return outputter.outputString(doc.getRootElement());
