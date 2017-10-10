@@ -4,6 +4,10 @@ League of Legends XMPP Chat Library
 
 A Java 7 XMPP library to chat and interact with the League of Legends chatservers. Built upon [Smack](http://www.igniterealtime.org/projects/smack/) and [JDOM](http://www.jdom.org/).
 
+<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/sCywAjA9UJZXFdDf3QeuU2Sp/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library'>
+  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/sCywAjA9UJZXFdDf3QeuU2Sp/TheHolyWaffle/League-of-Legends-XMPP-Chat-Library.svg' />
+</a>
+
 ## Features
 
 - [Documented source](http://www.javadoc.io/doc/com.github.theholywaffle/lolchatapi)
